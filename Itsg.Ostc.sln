@@ -16,6 +16,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itsg.Ostc2.Validator", "Itsg.Ostc2.Validator\Itsg.Ostc2.Validator.csproj", "{C471B64D-04F5-40AA-8D26-21E4552FC1FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{094BCC53-8A1E-4ADE-9936-139D7D1DE087}"
+	ProjectSection(SolutionItems) = preProject
+		Tools\nuget.exe = Tools\nuget.exe
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D7E2F3EC-2092-4480-8397-39F3CBCE0343}"
 EndProject
