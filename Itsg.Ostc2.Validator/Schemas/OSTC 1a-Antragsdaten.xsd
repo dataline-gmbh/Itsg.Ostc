@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Mit XMLSpy v2006 rel. 3 sp2 bearbeitet (http://www.altova.com) von ITSG GmbH (ITSG GmbH) -->
+<!-- edited with XMLSpy v2007 sp2 (http://www.altova.com) by Uli Keller (ITSG GmbH) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="de">
+	<xsd:annotation>
+		<xsd:documentation>
+			<!--
+      FILE: OSTC-Antragsdaten über eXTra.xsd
+      TASK: Das XML-Schema beschreibt die Struktur der OSTC Eingabe
+      PROJECT: XML-Schema zur Datensatzbeschreibung der OSTC Version 1.0
+      VERSION: 1.0
+      COPYRIGHT: (c) 2007 ITSG
+      Daimlerstr. 11, 63110 Rodgau, Germany
+     History:
+       2007/10/30: XML-Schema nach Datensatzbeschreibung für OSTC V2.5 umgesetzt. (uk)
+          -->
+		</xsd:documentation>
+	</xsd:annotation>
+	<!--  #################################################################-->
+	<!--  ###                            HILFSKONSTRUKTE                                              ##-->
+	<!--  #################################################################-->
+	<!--  ##  Definitionen eingeschränkter simpleTypes                                             ##-->
+	<!--  ##      alphanummerische SimpleTypes                                                      ##-->
+	<!--  ##   *an* bedeutet alphanumerisch                                                             ##-->
+	<!--  ##    *an_10* gibt die Anzahl der maximal zulässigen zeichen an.                ##-->
+	<!--  #################################################################-->
+	<xsd:simpleType name="sType_an_3">
+		<xsd:annotation>
+			<xsd:documentation>bis zu 3 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="0"/>
+			<xsd:maxLength value="3"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sType_an_10">
+		<xsd:annotation>
+			<xsd:documentation>bis zu 10 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="0"/>
+			<xsd:maxLength value="10"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sType_an_20">
+		<xsd:annotation>
+			<xsd:documentation>bis zu 20 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="0"/>
+			<xsd:maxLength value="20"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sType_an_25">
+		<xsd:annotation>
+			<xsd:documentation>bis zu 25 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="0"/>
+			<xsd:maxLength value="25"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sType_an_30">
+		<xsd:annotation>
+			<xsd:documentation>bis zu 30 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="0"/>
+			<xsd:maxLength value="30"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sType_an_40">
+		<xsd:annotation>
+			<xsd:documentation>bis zu 40 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="0"/>
+			<xsd:maxLength value="40"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sType_an_50">
+		<xsd:annotation>
+			<xsd:documentation>bis zu 50 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="0"/>
+			<xsd:maxLength value="50"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sType_an_80">
+		<xsd:annotation>
+			<xsd:documentation>bis zu 80 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="0"/>
+			<xsd:maxLength value="80"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sType_an_100">
+		<xsd:annotation>
+			<xsd:documentation>bis zu 100 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="0"/>
+			<xsd:maxLength value="100"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sType_an_321">
+		<xsd:annotation>
+			<xsd:documentation>bis zu 321 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="0"/>
+			<xsd:maxLength value="321"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sType_base64">
+		<xsd:annotation>
+			<xsd:documentation>alphanumerische Stellen Format: base64</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:base64Binary"/>
+	</xsd:simpleType>
+	<!--  #################################################################-->
+	<!--  ##  Definitionen eingeschränkter simpleTypes                                             ##-->
+	<!--  ##      alphanummerische SimpleTypes                                                      ##-->
+	<!--  ##   *an* bedeutet alphanumerisch                                                             ##-->
+	<!--  ##    *an3* bedeutet genau 3 alphanummerische Zeichen                             ##-->
+	<!--  #################################################################-->
+	<xsd:simpleType name="sType_an8">
+		<xsd:annotation>
+			<xsd:documentation>genau 8 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="8"/>
+			<xsd:maxLength value="8"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sType_an10">
+		<xsd:annotation>
+			<xsd:documentation>genau 10 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="10"/>
+			<xsd:maxLength value="10"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="sType_an10_11">
+		<xsd:annotation>
+			<xsd:documentation>genau 10 oder 11 alphanumerische Stellen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="10"/>
+			<xsd:maxLength value="11"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!--  #################################################################-->
+	<!--  ##  Element                                                                                             ##-->
+	<!--  ##   OSTCAntrag                                                                                      ##-->
+	<!--  #################################################################-->
+	<xsd:element name="OSTCAntrag">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Antragsteller">
+					<xsd:annotation>
+						<xsd:documentation>Daten des Antragstellers</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:annotation>
+							<xsd:documentation>Enthält die Adressdaten des Antragsstellers</xsd:documentation>
+						</xsd:annotation>
+						<xsd:sequence>
+							<xsd:element name="IK_BN" type="sType_an10_11">
+								<xsd:annotation>
+									<xsd:documentation>Institutionskennzeichen oder Betriebsnummer des Teilnehmers.
+Es muss immer die Konstante "IK" bzw. "BN" in den ersten beiden Stellen übermittelt werden. </xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Firma" type="sType_an_80">
+								<xsd:annotation>
+									<xsd:documentation>Firmenname</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Anrede" type="sType_an_10">
+								<xsd:annotation>
+									<xsd:documentation>Anrede des Ansprechpartners</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Vorname" type="sType_an_30" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Vorname des Ansprechpartners</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Nachname" type="sType_an_100">
+								<xsd:annotation>
+									<xsd:documentation>Nachname des Ansprechpartners</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Strasse" type="sType_an_50"/>
+							<xsd:element name="Hausnummer" type="sType_an_10" minOccurs="0"/>
+							<xsd:element name="Länderkennzeichen" type="sType_an_3" minOccurs="0"/>
+							<xsd:element name="PLZ" type="sType_an_10"/>
+							<xsd:element name="Ort" type="sType_an_40"/>
+							<xsd:element name="Telefon" type="sType_an_25"/>
+							<xsd:element name="Telefax" type="sType_an_25" minOccurs="0"/>
+							<xsd:element name="Email" type="sType_an_321">
+								<xsd:annotation>
+									<xsd:documentation>Emailadresse des Antragstellers</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Kennwort" type="sType_an_20" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Kennwort für telefonische Aufträge beim Trust Center</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Antragsinfo">
+					<xsd:annotation>
+						<xsd:documentation>Angaben zum Antrag und p10-Requestschlüssel</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:annotation>
+							<xsd:documentation>ASK Datensatz</xsd:documentation>
+						</xsd:annotation>
+						<xsd:sequence>
+							<xsd:element name="Softwarehaus" type="sType_an_40" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Name des Softwarehauses</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Fachanwendung" type="sType_an_40" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Name der Fachanwendung</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Dakota_Lizenz" type="sType_an8" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Lizenzcode für dakota Feld ausschließlich für ITSG-Software</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Datum" type="sType_an10">
+								<xsd:annotation>
+									<xsd:documentation>Datum der Antragserstellung Format: DD.MM.JJJJ</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Uhrzeit" type="sType_an8">
+								<xsd:annotation>
+									<xsd:documentation>Uhrzeit der Antragserstellung Format: HH:MM:SS</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Requestschlüssel" type="sType_base64">
+								<xsd:annotation>
+									<xsd:documentation>p10-Requestschlüssel Format: base64</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Rechnungsadresse" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Optionale Rechnungsadresse</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:annotation>
+							<xsd:documentation>Enthält die Adressdaten des Rechnungsempfängers</xsd:documentation>
+						</xsd:annotation>
+						<xsd:sequence>
+							<xsd:element name="Re_Firma" type="sType_an_80" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Firmenname des Rechnungsempfängers</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Re_Anrede" type="sType_an_10">
+								<xsd:annotation>
+									<xsd:documentation>Anrede in Rechnungsanschrift</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Re_Vorname" type="sType_an_30" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Vorname in Rechnungsanschrift</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Re_Nachname" type="sType_an_100" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Nachname in Rechnungsanschrift</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Re_Strasse" type="sType_an_50" minOccurs="0"/>
+							<xsd:element name="Re_Hausnummer" type="sType_an_10" minOccurs="0"/>
+							<xsd:element name="Re_Postfach" type="sType_an_10" minOccurs="0"/>
+							<xsd:element name="Re_Länderkennzeichen" type="sType_an_3" minOccurs="0"/>
+							<xsd:element name="Re_PLZ" type="sType_an_10" minOccurs="0"/>
+							<xsd:element name="Re_Ort" type="sType_an_40" minOccurs="0"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

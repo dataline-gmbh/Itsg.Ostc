@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Mit XMLSpy v2011 rel. 2 sp1 (http://www.altova.com) von Sandra Rillox (ITSG GmbH - Informationstechnische Servicestelle der Gesetzlichen Krankenversicherung) bearbeitet -->
+<!--W3C Schema erstellt mit XMLSpy v2011 rel. 2 sp1 (http://www.altova.com)-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="de">
+	<xs:element name="OSTCListe">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Liste">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="annahme-pkcs.agv"/>
+							<xs:enumeration value="annahme-pkcs.key"/>
+							<xs:enumeration value="annahme-sha256.agv"/>
+							<xs:enumeration value="annahme-sha256.key"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

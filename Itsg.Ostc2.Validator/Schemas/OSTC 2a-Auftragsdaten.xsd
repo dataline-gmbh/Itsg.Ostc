@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Mit XMLSpy v2011 rel. 2 sp1 (http://www.altova.com) von Sandra Rillox (ITSG GmbH - Informationstechnische Servicestelle der Gesetzlichen Krankenversicherung) bearbeitet -->
+<!--W3C Schema erstellt mit XMLSpy v2011 rel. 2 sp1 (http://www.altova.com)-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="de">
+	<xs:simpleType name="sType_an_min1">
+		<xs:annotation>
+			<xs:documentation>mindestens eine alphanumerische Stelle</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z0-9]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="sType_an_9">
+		<xs:annotation>
+			<xs:documentation>exakt 9 alphanumerische Stellen</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{9}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="sType_an_8">
+		<xs:annotation>
+			<xs:documentation>exakt 8 alphanumerische Stellen</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{8}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="sType_an_max80">
+		<xs:annotation>
+			<xs:documentation>bis zu 80 alphanumerische Stellen</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="80"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="OSTCAuftrag">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Auftragsnummer" type="sType_an_min1"/>
+				<xs:choice>
+					<xs:element name="BNR" type="sType_an_8"/>
+					<xs:element name="ZNR" type="sType_an_8"/>
+					<xs:element name="IK" type="sType_an_9"/>
+				</xs:choice>
+				<xs:element name="hash" type="sType_an_max80"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

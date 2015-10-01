@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Oliver Staudt (Applied Security GmbH) -->
+<!--
+    Schema module describing shared eXTra components
+    
+    @file    eXTra-components-1.xsd
+    @changed 2011-07-27 SM Changed Procedure (http://www.itsg.de/ostc|ostc)
+	@changed 2011-08-26 Changed Procedure "http://www.itsg.de/ostc"
+	@changed 2011-08-26 Changed DataType "http://www.itsg.de/ostc/ListenAnfragen"
+-->
+<xs:schema xmlns="http://www.extra-standard.de/namespace/components/1" xmlns:xcode="http://www.extra-standard.de/namespace/codelists/1" xmlns:xplg="http://www.extra-standard.de/namespace/plugins/1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.extra-standard.de/namespace/components/1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.1.0">
+	<!-- Import eXTra code lists -->
+	<xs:import namespace="http://www.extra-standard.de/namespace/codelists/1" schemaLocation="eXTra-codelists-1.xsd"/>
+	<!-- Import eXTra plug-ins -->
+	<xs:import namespace="http://www.extra-standard.de/namespace/plugins/1" schemaLocation="OSTC-4a-plugins-1.xsd"/>
+	<!-- Import XML Signature namespace -->
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+	<xs:include schemaLocation="OSTC-components-1.xsd"/>
+	<xs:element name="ResponseDetails" type="ResponseDetails4bType"/>
+	<xs:element name="RequestDetails" type="RequestDetails4aType"/>
+	<xs:complexType name="ClassifiableID1aType">
+		<xs:simpleContent>
+			<xs:restriction base="ClassifiableIDType">
+				<xs:attribute name="class" type="SimpleClassType" use="prohibited"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="Application1aType">
+		<xs:complexContent>
+			<xs:restriction base="ApplicationType">
+				<xs:sequence>
+					<xs:element ref="Product"/>
+					<xs:element ref="Manufacturer"/>
+					<xs:element name="RegistrationID" type="RegistrationIDType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>@profile maxOcc=1</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="Application" type="Application1aType"/>
+	<xs:complexType name="RequestDetails4aType">
+		<xs:sequence>
+			<xs:element ref="RequestID"/>
+			<xs:element ref="TimeStamp" minOccurs="0"/>
+			<xs:element ref="Application"/>
+			<xs:element name="Procedure">
+				<xs:annotation>
+					<xs:documentation>@profile minOcc=1; maxLen entfernt</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="SimpleNameType">
+						<xs:minLength value="1"/>
+						<xs:pattern value="http://www.itsg.de/ostc"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DataType">
+				<xs:annotation>
+					<xs:documentation>@profile pattern</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="SimpleURIencodableType">
+						<xs:minLength value="1"/>
+						<xs:pattern value="http://www.itsg.de/ostc/ListenAnfragen"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Scenario">
+				<xs:annotation>
+					<xs:documentation>@profile enumeration</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="ScenarioType">
+						<xs:enumeration value="http://www.extra-standard.de/scenario/request-with-response"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="TestIndicator" default="http://www.extra-standard.de/test/NONE">
+		<xs:simpleType>
+			<xs:restriction base="xcode:TestIndicatorCodeType">
+				<xs:enumeration value="http://www.extra-standard.de/test/NONE"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="ResponseID">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:restriction base="ClassifiableIDType">
+					<xs:attribute name="class" use="required">
+						<xs:simpleType>
+							<xs:restriction base="SimpleClassType">
+								<xs:enumeration value="Liste"/>
+								<xs:enumeration value="Fehler"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:restriction>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="ResponseDetails4bType">
+		<xs:sequence>
+			<xs:element ref="ResponseID"/>
+			<xs:element ref="TimeStamp"/>
+			<xs:element ref="Report"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

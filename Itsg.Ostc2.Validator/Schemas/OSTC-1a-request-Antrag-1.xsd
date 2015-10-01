@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2011 rel. 2 sp1 (http://www.altova.com) von Sandra Rillox (ITSG GmbH - Informationstechnische Servicestelle der Gesetzlichen Krankenversicherung) bearbeitet -->
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Oliver Staudt (Applied Security GmbH) -->
+<!--
+    Schema module describing eXTra request documents
+    
+    @file    eXTra-request-1.xsd
+    @version 1.1.0
+    @removed 2011-09-09 TestIndicator
+
+    
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xcpt="http://www.extra-standard.de/namespace/components/1" xmlns:xreq="http://www.extra-standard.de/namespace/request/1" xmlns:xlog="http://www.extra-standard.de/namespace/logging/1" xmlns:xplg="http://www.extra-standard.de/namespace/plugins/1" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns="http://www.extra-standard.de/namespace/request/1" targetNamespace="http://www.extra-standard.de/namespace/request/1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.1.0">
+	<!-- Import shared element declarations and type declarations -->
+	<xs:import namespace="http://www.extra-standard.de/namespace/components/1" schemaLocation="OSTC-1a-components-1.xsd"/>
+	<!-- Import eXTra Logging namespace -->
+	<xs:import namespace="http://www.extra-standard.de/namespace/logging/1" schemaLocation="OSTC-logging-1.xsd"/>
+	<!-- Import eXTra Plugin namespace -->
+	<xs:import namespace="http://www.extra-standard.de/namespace/plugins/1" schemaLocation="OSTC-1a-plugins-1.xsd"/>
+	<!-- Import XML Encryption namespace -->
+	<xs:import namespace="http://www.w3.org/2001/04/xmlenc#" schemaLocation="xenc-schema.xsd"/>
+	<!-- Root element type declaration -->
+	<xs:complexType name="TransportRequestType">
+		<xs:complexContent>
+			<xs:extension base="xcpt:RootElementType">
+				<xs:sequence>
+					<xs:element ref="TransportHeader"/>
+					<xs:element ref="TransportPlugIns" minOccurs="0"/>
+					<xs:element ref="TransportBody"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Other type declarations -->
+	<xs:complexType name="TransportRequestHeaderType">
+		<xs:complexContent>
+			<xs:extension base="xcpt:ElementWithOptionalVersionType">
+				<xs:sequence>
+					<xs:element ref="xcpt:Sender"/>
+					<xs:element ref="xcpt:Receiver"/>
+					<xs:element ref="xcpt:RequestDetails"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- TransportRequestBodyType
+        @changed 2009-05-05 MS + Added TransformedData to choice group
+    -->
+	<xs:complexType name="TransportRequestBodyType">
+		<xs:complexContent>
+			<xs:extension base="xcpt:ElementWithOptionalVersionType">
+				<xs:choice minOccurs="0">
+					<xs:element ref="xcpt:Data"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Element declarations -->
+	<!-- Transport Layer -->
+	<xs:element name="XMLTransport">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction base="TransportRequestType">
+					<xs:sequence>
+						<xs:element ref="xreq:TransportHeader"/>
+						<xs:element ref="xreq:TransportPlugIns" minOccurs="0"/>
+						<xs:element ref="xreq:TransportBody"/>
+					</xs:sequence>
+					<xs:attribute name="profile" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xcpt:ProfileIDType">
+								<xs:enumeration value="http://www.extra-standard.de/profile/DEUEVGKV/1.1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:restriction>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TransportHeader">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction base="TransportRequestHeaderType">
+					<xs:sequence>
+						<xs:element ref="xcpt:Sender"/>
+						<xs:element ref="xcpt:Receiver"/>
+						<xs:element ref="xcpt:RequestDetails"/>
+					</xs:sequence>
+					<xs:attribute name="version" type="xcpt:SupportedVersionsType" use="prohibited"/>
+				</xs:restriction>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TransportPlugIns">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction base="xcpt:AnyPlugInContainerType">
+					<xs:sequence>
+						<xs:element ref="xplg:DataTransforms"/>
+						<xs:element ref="xplg:DataSource"/>
+					</xs:sequence>
+				</xs:restriction>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TransportBody">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction base="TransportRequestBodyType">
+					<xs:choice minOccurs="0">
+						<xs:element ref="xcpt:Data"/>
+					</xs:choice>
+					<xs:attribute name="version" type="xcpt:SupportedVersionsType" use="prohibited"/>
+				</xs:restriction>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
