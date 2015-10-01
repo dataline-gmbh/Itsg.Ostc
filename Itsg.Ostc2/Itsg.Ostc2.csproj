@@ -35,6 +35,9 @@
     <DocumentationFile>bin\Release\Itsg.Ostc2.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="IValidatorFactory.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="OSTC 1a-Antragsdaten.cs" />

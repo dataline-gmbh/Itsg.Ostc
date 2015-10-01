@@ -49,6 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="OstcExtraValidationResources.cs" />
     <Compile Include="OstcExtraValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
