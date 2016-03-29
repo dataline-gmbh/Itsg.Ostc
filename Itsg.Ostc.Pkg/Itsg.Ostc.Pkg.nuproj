@@ -22,7 +22,7 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>Itsg.Ostc</Id>
-    <Version>1.0.0-beta01</Version>
+    <Version>0.1.0</Version>
     <Title>OSTC-Basisfunktionen</Title>
     <Authors>DATALINE GmbH &amp; Co. KG</Authors>
     <Owners>DATALINE GmbH &amp; Co. KG</Owners>
