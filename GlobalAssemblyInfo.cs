@@ -2,7 +2,7 @@
 using System.Reflection;
 using System;
 
-// Allgemeine Informationen über eine Assembly werden über folgende 
+// Allgemeine Informationen über eine Assembly werden über folgende
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
 #if !DEBUG
@@ -23,7 +23,7 @@ using System;
 //      Buildnummer
 //      Revision
 //
-// Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
+// Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.1.*")]
