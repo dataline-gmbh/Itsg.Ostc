@@ -99,7 +99,7 @@ namespace Itsg.Ostc2
 
         private void ValidateData(byte[] data, OstcMessageType messageType)
         {
-            System.Diagnostics.Debug.Assert(messageType == OstcMessageType.ApplicationData || messageType == OstcMessageType.KeyData || messageType == OstcMessageType.ListData || messageType == OstcMessageType.OrderData);
+            System.Diagnostics.Debug.Assert(messageType == OstcMessageType.ApplicationData || messageType == OstcMessageType.KeyData || messageType == OstcMessageType.OrderData);
             if (OstcExtraValidatorFactory == null)
                 return;
             var validator = OstcExtraValidatorFactory.Create(messageType, ExtraTransportDirection.Request);
@@ -431,17 +431,28 @@ namespace Itsg.Ostc2
         /// <summary>
         /// Herunterladen der Zertifikat-Liste
         /// </summary>
-        /// <param name="list">Zertifikat-Liste die zu Laden ist</param>
+        /// <param name="certificateListName">Zertifikat-Liste die zu Laden ist (z.B. <code>annahme-pkcs.agv</code> oder <code>annahme-sha256.agv</code>)</param>
         /// <returns>Zertifikat-Liste</returns>
-        public async Task<IReadOnlyList<X509Certificate>> DownloadCertificateListAsync(OstcListeListe list)
+        public async Task<IReadOnlyList<X509Certificate>> DownloadCertificateListAsync(string certificateListName)
         {
-            var query = new OstcListe
+            var query = new DataRequestType()
             {
-                Liste = list
+                version = AbstractMessageTypeVersion.Item11,
+                Query = new[]
+                {
+                    new DataRequestArgumentType()
+                    {
+                        property = OstcDataType.ListRequest,
+                        type = XSDPrefixedTypeCodes1.xsstring,
+                        Items = new[]
+                        {
+                            new OperandType() { Value = certificateListName }
+                        },
+                        ItemsElementName = new [] { ItemsChoiceType4.EQ },
+                    }
+                }
             };
             var queryData = OstcUtils.Serialize(query, Encoding.UTF8);
-
-            ValidateData(queryData, OstcMessageType.ListData);
 
             var now = DateTime.Now;
             var message = new TransportRequestType()

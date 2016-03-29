@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2011 rel. 2 sp1 (http://www.altova.com) von Sandra Rillox (ITSG GmbH - Informationstechnische Servicestelle der Gesetzlichen Krankenversicherung) bearbeitet -->
 <!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Oliver Staudt (Applied Security GmbH) -->
 <!--
     Schema module describing shared eXTra components
@@ -12,8 +13,6 @@
 <xs:schema xmlns="http://www.extra-standard.de/namespace/components/1" xmlns:xcode="http://www.extra-standard.de/namespace/codelists/1" xmlns:xplg="http://www.extra-standard.de/namespace/plugins/1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.extra-standard.de/namespace/components/1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.1.0">
 	<!-- Import eXTra code lists -->
 	<xs:import namespace="http://www.extra-standard.de/namespace/codelists/1" schemaLocation="eXTra-codelists-1.xsd"/>
-	<!-- Import eXTra plug-ins
-	<xs:import namespace="http://www.extra-standard.de/namespace/plugins/1" schemaLocation="OSTC-plugins-1.xsd"/> -->
 	<!-- Import XML Signature namespace -->
 	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
 	<!-- Simple content types -->

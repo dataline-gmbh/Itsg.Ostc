@@ -67,6 +67,8 @@
 									<xs:sequence>
 										<xs:element name="Specification" type="SpecificationType" minOccurs="0" maxOccurs="0"/>
 									</xs:sequence>
+									<xs:attribute name="name" type="xs:string" use="prohibited"/>
+									<xs:attribute name="version" type="xs:string" use="prohibited"/>
 								</xs:restriction>
 							</xs:complexContent>
 						</xs:complexType>

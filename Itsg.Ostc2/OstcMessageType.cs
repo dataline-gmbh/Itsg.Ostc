@@ -41,10 +41,5 @@ namespace Itsg.Ostc2
         /// Daten für die Abholung des Zertifikats
         /// </summary>
         KeyData,
-
-        /// <summary>
-        /// Daten für das Abfragen der Zertifikat-Liste
-        /// </summary>
-        ListData,
     }
 }

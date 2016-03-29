@@ -43,7 +43,6 @@
     <Compile Include="OSTC 1a-Antragsdaten.cs" />
     <Compile Include="OSTC 2a-Auftragsdaten.cs" />
     <Compile Include="OSTC 3a-Schluesseldaten.cs" />
-    <Compile Include="OSTC 4a-Listedaten.cs" />
     <Compile Include="Ostc2Exception.cs" />
     <Compile Include="OstcAntrag.cs" />
     <Compile Include="OstcApplicationResult.cs" />
@@ -62,12 +61,12 @@
       <HintPath>..\packages\Portable.BouncyCastle-Signed.1.7.0.2\lib\portable-net45+dnxcore50+wp80+win+wpa81+MonoTouch10+MonoAndroid10+xamarinmac20+xamarinios10\crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ExtraStandard, Version=0.1.19.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dataline.ExtraStandard.0.1.19\lib\portable-net45+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10\ExtraStandard.dll</HintPath>
+    <Reference Include="ExtraStandard, Version=0.2.1.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.0.2.1\lib\portable-net45+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10\ExtraStandard.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ExtraStandard.Extra11, Version=0.1.19.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dataline.ExtraStandard.Extra11.0.1.19\lib\portable-net45+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10\ExtraStandard.Extra11.dll</HintPath>
+    <Reference Include="ExtraStandard.Extra11, Version=0.2.1.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.Extra11.0.2.1\lib\portable-net45+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10\ExtraStandard.Extra11.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations.PCL328, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
@@ -84,7 +83,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Itsg.Ostc\Itsg.Ostc.csproj">

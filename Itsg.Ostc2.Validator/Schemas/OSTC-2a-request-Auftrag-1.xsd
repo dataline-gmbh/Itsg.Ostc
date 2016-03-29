@@ -11,13 +11,11 @@
    
 
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xcpt="http://www.extra-standard.de/namespace/components/1" xmlns:xreq="http://www.extra-standard.de/namespace/request/1" xmlns:xlog="http://www.extra-standard.de/namespace/logging/1" xmlns:xplg="http://www.extra-standard.de/namespace/plugins/1" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns="http://www.extra-standard.de/namespace/request/1" targetNamespace="http://www.extra-standard.de/namespace/request/1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.1.0">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xcpt="http://www.extra-standard.de/namespace/components/1" xmlns:xreq="http://www.extra-standard.de/namespace/request/1" xmlns:xlog="http://www.extra-standard.de/namespace/logging/1" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns="http://www.extra-standard.de/namespace/request/1" targetNamespace="http://www.extra-standard.de/namespace/request/1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.1.0">
 	<!-- Import shared element declarations and type declarations -->
 	<xs:import namespace="http://www.extra-standard.de/namespace/components/1" schemaLocation="OSTC-2a-components-1.xsd"/>
 	<!-- Import eXTra Logging namespace -->
 	<xs:import namespace="http://www.extra-standard.de/namespace/logging/1" schemaLocation="OSTC-logging-1.xsd"/>
-	<!-- Import eXTra Plugin namespace -->
-	<xs:import namespace="http://www.extra-standard.de/namespace/plugins/1" schemaLocation="OSTC-2a-plugins-1.xsd"/>
 	<!-- Import XML Encryption namespace -->
 	<xs:import namespace="http://www.w3.org/2001/04/xmlenc#" schemaLocation="xenc-schema.xsd"/>
 	<!-- Root element type declaration -->

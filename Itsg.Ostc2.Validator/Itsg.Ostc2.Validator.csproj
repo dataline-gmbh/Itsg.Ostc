@@ -31,12 +31,12 @@
     <DocumentationFile>bin\Release\Itsg.Ostc2.Validator.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExtraStandard, Version=0.1.19.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dataline.ExtraStandard.0.1.19\lib\net40\ExtraStandard.dll</HintPath>
+    <Reference Include="ExtraStandard, Version=0.2.1.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.0.2.1\lib\net40\ExtraStandard.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ExtraStandard.Validation, Version=0.1.19.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dataline.ExtraStandard.Validation.0.1.19\lib\net40\ExtraStandard.Validation.dll</HintPath>
+    <Reference Include="ExtraStandard.Validation, Version=0.2.1.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.Validation.0.2.1\lib\net40\ExtraStandard.Validation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -70,9 +70,6 @@
     <None Include="Schemas\OSTC 3a-Schlüsseldaten.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Schemas\OSTC 4a-Listedaten.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Schemas\OSTC-1a-components-1.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -88,9 +85,6 @@
     <None Include="Schemas\OSTC-2a-components-1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Schemas\OSTC-2a-plugins-1.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Schemas\OSTC-2a-request-Auftrag-1.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -100,19 +94,13 @@
     <None Include="Schemas\OSTC-3a-components-1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Schemas\OSTC-3a-plugins-1.xsd">
+    <None Include="Schemas\OSTC-3a-request-SchluesselAnfragen-1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Schemas\OSTC-3a-request-SchlüsselAnfragen-1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-3b-response-SchlüsselAnfragen-1.xsd">
+    <None Include="Schemas\OSTC-3b-response-SchluesselAnfragen-1.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Schemas\OSTC-4a-components-1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-4a-plugins-1.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Schemas\OSTC-4a-request-ListeAnfragen-1.xsd">
@@ -136,6 +124,7 @@
     <None Include="Schemas\xmldsig-core-schema.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Schemas\xsd2cs.cmd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Itsg.Ostc2\Itsg.Ostc2.csproj">

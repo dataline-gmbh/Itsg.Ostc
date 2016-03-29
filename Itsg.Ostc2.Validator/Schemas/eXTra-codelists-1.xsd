@@ -158,7 +158,7 @@
                 A list of prefixed XSD atomic type names
             </xs:documentation>
 		</xs:annotation>
-		<xs:restriction base="xs:QName">
+		<xs:restriction base="xs:string">
 			<xs:enumeration value="xs:string"/>
 			<xs:enumeration value="xs:normalizedString"/>
 			<xs:enumeration value="xs:token"/>

@@ -50,7 +50,7 @@ namespace Itsg.Ostc2.Validator
                     methodId = 2;
                     break;
                 case OstcMessageType.Key:
-                    src = "SchlüsselAnfragen";
+                    src = "SchluesselAnfragen";
                     methodId = 3;
                     break;
                 case OstcMessageType.List:
@@ -68,8 +68,6 @@ namespace Itsg.Ostc2.Validator
                                 return "OSTC 2a-Auftragsdaten.xsd";
                             case OstcMessageType.KeyData:
                                 return "OSTC 3a-Schlüsseldaten.xsd";
-                            case OstcMessageType.ListData:
-                                return "OSTC 4a-Listedaten.xsd";
                         }
                     }
                     throw new NotSupportedException($"The combination {messageType}/{transportDirection} is not supported yet.");
