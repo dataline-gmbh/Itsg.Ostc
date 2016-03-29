@@ -30,7 +30,7 @@ namespace Itsg.Ostc2
     /// <summary>
     /// Client, über den auf die OSTC-Funktionen (V2) zugegriffen wird
     /// </summary>
-    public class Ostclient
+    public class OstcClient
     {
         internal static readonly CultureInfo CultureDe = new CultureInfo("de-DE");
         internal static readonly Encoding Iso88591 = Encoding.GetEncoding("iso-8859-1");
@@ -65,7 +65,7 @@ namespace Itsg.Ostc2
         /// <param name="client">IRestClient, der für die Kommunikation mit dem Server verwendet wird</param>
         /// <param name="credentials">Die Login-Informationen, damit der Client auf den OSTC-Server zugreifen darf</param>
         /// <param name="clientInfo">OSTC-Client-Informationen</param>
-        public Ostclient(OstcSender sender, IRestClient client, ICredentials credentials, OstcClientInfo clientInfo)
+        public OstcClient(OstcSender sender, IRestClient client, ICredentials credentials, OstcClientInfo clientInfo)
         {
             if (clientInfo == null)
                 throw new ArgumentNullException(nameof(clientInfo), "Es müssen Client-Informationen angegeben werden");
