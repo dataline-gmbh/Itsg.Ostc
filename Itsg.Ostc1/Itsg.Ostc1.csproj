@@ -64,8 +64,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="CenterCLR.SgmlReader, Version=2014.12.7.3, Culture=neutral, PublicKeyToken=46b2db9ca481831b, processorArchitecture=MSIL">
-      <HintPath>..\packages\CenterCLR.SgmlReader.2014.12.7.3\lib\portable-net403+sl50+win+WindowsPhoneApp81+wp80\CenterCLR.SgmlReader.dll</HintPath>
+    <Reference Include="CenterCLR.SgmlReader, Version=2016.3.27.2, Culture=neutral, PublicKeyToken=46b2db9ca481831b, processorArchitecture=MSIL">
+      <HintPath>..\packages\CenterCLR.SgmlReader.2016.3.27.2\lib\portable-net403+sl50+win+WindowsPhoneApp81+wp80+MonoAndroid10+Xamarin.iOS10+MonoTouch10\CenterCLR.SgmlReader.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="crypto, Version=1.7.0.0, Culture=neutral, PublicKeyToken=52d7d8cd84e8295f, processorArchitecture=MSIL">
@@ -80,8 +80,8 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RestSharp.Portable.Core, Version=3.0.5808.20166, Culture=neutral, PublicKeyToken=be81bb0f53eab22f, processorArchitecture=MSIL">
-      <HintPath>..\packages\FubarCoder.RestSharp.Portable.Core.3.0.0-beta14\lib\portable-net45+win+wpa81+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\RestSharp.Portable.Core.dll</HintPath>
+    <Reference Include="RestSharp.Portable.Core, Version=3.1.3.0, Culture=neutral, PublicKeyToken=be81bb0f53eab22f, processorArchitecture=MSIL">
+      <HintPath>..\packages\FubarCoder.RestSharp.Portable.Core.3.1.3\lib\portable-net45+win+wpa81+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\RestSharp.Portable.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

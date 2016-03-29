@@ -31,12 +31,12 @@
     <DocumentationFile>bin\Release\Itsg.Ostc2.Validator.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExtraStandard, Version=0.1.16.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dataline.ExtraStandard.0.1.16\lib\net40\ExtraStandard.dll</HintPath>
+    <Reference Include="ExtraStandard, Version=0.1.19.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.0.1.19\lib\net40\ExtraStandard.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ExtraStandard.Validation, Version=0.1.16.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dataline.ExtraStandard.Validation.0.1.16\lib\net40\ExtraStandard.Validation.dll</HintPath>
+    <Reference Include="ExtraStandard.Validation, Version=0.1.19.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.Validation.0.1.19\lib\net40\ExtraStandard.Validation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
