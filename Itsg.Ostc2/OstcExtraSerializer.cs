@@ -19,7 +19,7 @@ namespace Itsg.Ostc2
         /// <summary>
         /// Standard-Serialisierer für ISO-8859-1
         /// </summary>
-        public static OstcExtraSerializer Iso88591 = new OstcExtraSerializer(OstcClient.Iso88591);
+        public static OstcExtraSerializer Iso88591 = new OstcExtraSerializer(Ostclient.Iso88591);
 
         /// <summary>
         /// Standard-Serialisierer für UTF-8
