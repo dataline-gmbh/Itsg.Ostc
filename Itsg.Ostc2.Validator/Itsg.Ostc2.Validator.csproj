@@ -31,12 +31,12 @@
     <DocumentationFile>bin\Release\Itsg.Ostc2.Validator.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExtraStandard, Version=0.1.19.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dataline.ExtraStandard.0.1.19\lib\net40\ExtraStandard.dll</HintPath>
+    <Reference Include="ExtraStandard, Version=0.2.2.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.0.2.2\lib\net40\ExtraStandard.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ExtraStandard.Validation, Version=0.1.19.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dataline.ExtraStandard.Validation.0.1.19\lib\net40\ExtraStandard.Validation.dll</HintPath>
+    <Reference Include="ExtraStandard.Validation, Version=0.2.2.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.Validation.0.2.2\lib\net40\ExtraStandard.Validation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -58,84 +58,84 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Schemas\eXTra-codelists-1.xsd">
+    <EmbeddedResource Include="Schema\eXTra-codelists-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC 1a-Antragsdaten.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC 1a-Antragsdaten.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC 2a-Auftragsdaten.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC 2a-Auftragsdaten.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC 3a-Schlüsseldaten.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC 3a-Schlüsseldaten.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC 4a-Listedaten.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC 4a-Listedaten.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-1a-components-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-1a-components-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-1a-plugins-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-1a-plugins-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-1a-request-Antrag-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-1a-request-Antrag-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-1b-response-Antrag-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-1b-response-Antrag-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-2a-components-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-2a-components-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-2a-plugins-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-2a-plugins-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-2a-request-Auftrag-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-2a-request-Auftrag-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-2b-response-Auftrag-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-2b-response-Auftrag-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-3a-components-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-3a-components-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-3a-plugins-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-3a-plugins-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-3a-request-SchlüsselAnfragen-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-3a-request-SchlüsselAnfragen-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-3b-response-SchlüsselAnfragen-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-3b-response-SchlüsselAnfragen-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-4a-components-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-4a-components-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-4a-plugins-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-4a-plugins-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-4a-request-ListeAnfragen-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-4a-request-ListeAnfragen-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-4b-response-ListeAnfragen-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-4b-response-ListeAnfragen-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-components-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-components-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-logging-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-logging-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\OSTC-plugins-1.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\OSTC-plugins-1.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\xenc-schema.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\xenc-schema.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Schemas\xmldsig-core-schema.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Schema\xmldsig-core-schema.xsd">
       <SubType>Designer</SubType>
-    </None>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Itsg.Ostc2\Itsg.Ostc2.csproj">

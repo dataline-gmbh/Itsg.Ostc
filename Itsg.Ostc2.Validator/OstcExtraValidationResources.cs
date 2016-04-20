@@ -16,7 +16,7 @@ namespace Itsg.Ostc2.Validator
 #else
             ResourceAssembly = type.GetTypeInfo().Assembly;
 #endif
-            RootUrl = new Uri($"res:///{type.Namespace?.Replace('.', '/')}/Schemas/");
+            RootUrl = new Uri($"res:///{type.Namespace?.Replace('.', '/')}/Schema/");
             StartXmlSchemaFileName = GetXsdFileName(messageType, transportDirection);
         }
 

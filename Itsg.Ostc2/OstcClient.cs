@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -83,7 +84,7 @@ namespace Itsg.Ostc2
 
         private void ValidateRequest(byte[] request, OstcMessageType messageType)
         {
-            System.Diagnostics.Debug.Assert(messageType == OstcMessageType.Application || messageType == OstcMessageType.Key || messageType == OstcMessageType.List || messageType == OstcMessageType.Order);
+            Debug.Assert(messageType == OstcMessageType.Application || messageType == OstcMessageType.Key || messageType == OstcMessageType.List || messageType == OstcMessageType.Order);
             if (OstcExtraValidatorFactory == null)
                 return;
             var validator = OstcExtraValidatorFactory.Create(messageType, ExtraTransportDirection.Request);
@@ -99,7 +100,7 @@ namespace Itsg.Ostc2
 
         private void ValidateData(byte[] data, OstcMessageType messageType)
         {
-            System.Diagnostics.Debug.Assert(messageType == OstcMessageType.ApplicationData || messageType == OstcMessageType.KeyData || messageType == OstcMessageType.ListData || messageType == OstcMessageType.OrderData);
+            Debug.Assert(messageType == OstcMessageType.ApplicationData || messageType == OstcMessageType.KeyData || messageType == OstcMessageType.ListData || messageType == OstcMessageType.OrderData);
             if (OstcExtraValidatorFactory == null)
                 return;
             var validator = OstcExtraValidatorFactory.Create(messageType, ExtraTransportDirection.Request);
@@ -178,8 +179,8 @@ namespace Itsg.Ostc2
         /// Antragstellung
         /// </summary>
         /// <param name="application">Antrag</param>
-        /// <param name="certStore">Zertifikat-Speicher für die Abfrage des Absender-Zertifikats</param>
-        /// <param name="pfx">Zertifikat für die Verschlüsselung</param>
+        /// <param name="certStore">Zertifikat-Speicher für die Ermittlung der Zertifikatskette des Absender-Zertifikats</param>
+        /// <param name="pfx">Absender-Zertifikat für die Signierung des Antrags</param>
         /// <returns>Ergebnis der Antragstellung</returns>
         public async Task<OstcApplicationResult> SendApplicationAsync([NotNull] OstcAntrag application, [CanBeNull] IOstcCertificateStore certStore, [CanBeNull] Pkcs12Store pfx)
         {
@@ -221,8 +222,9 @@ namespace Itsg.Ostc2
 
             if (certificate != null)
             {
+                Debug.Assert(certStore != null, "certStore != null");
                 var certChain = certStore.GetChain(certificate).ToList();
-                System.Diagnostics.Debug.Assert(certChain[0].SubjectDN.Equivalent(certificate.SubjectDN));
+                Debug.Assert(certChain[0].SubjectDN.Equivalent(certificate.SubjectDN));
                 certChain.RemoveAt(0);
                 applicationData = OstcUtils.SignData(applicationData, rsaPrivateKey, certificate, certChain);
                 var receiverCert = certStore.GetCertificate(receiver);

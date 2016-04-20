@@ -41,6 +41,14 @@
       <HintPath>..\packages\Portable.BouncyCastle-Signed.1.7.0.2\lib\portable-net45+dnxcore50+wp80+win+wpa81+MonoTouch10+MonoAndroid10+xamarinmac20+xamarinios10\crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ExtraStandard, Version=0.2.2.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.0.2.2\lib\net40\ExtraStandard.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ExtraStandard.Validation, Version=0.2.2.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.Validation.0.2.2\lib\net40\ExtraStandard.Validation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -83,6 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ostc2Tests.cs" />
     <Compile Include="Ostc1Tests.cs" />
     <Compile Include="OstcUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,6 +109,14 @@
       <Project>{29bf2cd7-2966-42c4-afc5-cdfbf72981fe}</Project>
       <Name>Itsg.Ostc1</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Itsg.Ostc2.Validator\Itsg.Ostc2.Validator.csproj">
+      <Project>{c471b64d-04f5-40aa-8d26-21e4552fc1fa}</Project>
+      <Name>Itsg.Ostc2.Validator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Itsg.Ostc2\Itsg.Ostc2.csproj">
+      <Project>{ca776f8b-cf00-4d3e-87c4-5af3e64fa1c3}</Project>
+      <Name>Itsg.Ostc2</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Itsg.Ostc\Itsg.Ostc.csproj">
       <Project>{03a2525f-bd80-418d-b9df-500ba6dd2cce}</Project>
       <Name>Itsg.Ostc</Name>
@@ -107,6 +124,10 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Ostc2\Muster_1a_Antragsdaten_alle Elemente.xml" />
+    <EmbeddedResource Include="Data\Ostc2\Muster_1a_Antragsdaten_Pflichtelemente.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
