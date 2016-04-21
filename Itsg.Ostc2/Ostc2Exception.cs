@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using ExtraStandard;
@@ -19,7 +18,7 @@ namespace Itsg.Ostc2
         /// </summary>
         /// <param name="flags">eXTra-Fehler</param>
         public Ostc2Exception(IReadOnlyCollection<ExtraFlag> flags)
-            : base(string.Join("\n", flags.Select(x => string.Format("{0} ({1})", x.Text, x.Code))))
+            : base(string.Join("\n", flags.Select(x => $"{x.Text} ({x.Code})")))
         {
             Flags = flags;
         }
