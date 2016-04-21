@@ -31,12 +31,12 @@
     <DocumentationFile>bin\Release\Itsg.Ostc2.Validator.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExtraStandard, Version=0.2.2.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dataline.ExtraStandard.0.2.2\lib\net40\ExtraStandard.dll</HintPath>
+    <Reference Include="ExtraStandard, Version=0.2.3.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.0.2.3\lib\net40\ExtraStandard.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ExtraStandard.Validation, Version=0.2.2.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dataline.ExtraStandard.Validation.0.2.2\lib\net40\ExtraStandard.Validation.dll</HintPath>
+    <Reference Include="ExtraStandard.Validation, Version=0.2.3.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.Validation.0.2.3\lib\net40\ExtraStandard.Validation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -57,7 +57,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <EmbeddedResource Include="Schema\eXTra-codelists-1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -146,6 +145,9 @@
       <Project>{03a2525f-bd80-418d-b9df-500ba6dd2cce}</Project>
       <Name>Itsg.Ostc</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
