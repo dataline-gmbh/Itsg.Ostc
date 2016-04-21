@@ -1,8 +1,5 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Schema;
 
 using ExtraStandard.Validation;
@@ -16,15 +13,13 @@ namespace Itsg.Ostc.Test
 {
     public class Ostc2Tests
     {
-        private static readonly CultureInfo _cultureDe = new CultureInfo("de-DE");
-
         [Theory]
         [InlineData("Muster_1a_Antragsdaten_alle Elemente.xml")]
         [InlineData("Muster_1a_Antragsdaten_Pflichtelemente.xml")]
         public void ValidationTestSuccess(string orderResName)
         {
             byte[] data;
-            using (var resStream = this.GetType().Assembly.GetManifestResourceStream(this.GetType(), $"Data.Ostc2.{orderResName}"))
+            using (var resStream = GetType().Assembly.GetManifestResourceStream(GetType(), $"Data.Ostc2.{orderResName}"))
             {
                 Assert.NotNull(resStream);
                 using (var temp = new MemoryStream())
@@ -42,9 +37,9 @@ namespace Itsg.Ostc.Test
         [UseCulture("en-US")]
         public void ValidationTestFailure()
         {
-            var order = new Ostc2.OstcAntrag()
+            var order = new OstcAntrag()
             {
-                Antragsteller = new Ostc2.OstcAntragAntragsteller()
+                Antragsteller = new OstcAntragAntragsteller()
                 {
                     IK_BN = "12345678",
                 },
