@@ -7,8 +7,6 @@ using System.Xml.Schema;
 
 using ExtraStandard.Validation;
 
-using Itsg.Ostc1;
-using Itsg.Ostc1.Validator;
 using Itsg.Ostc2;
 using Itsg.Ostc2.Validator;
 
@@ -54,7 +52,7 @@ namespace Itsg.Ostc.Test
             var encoding = Encoding.GetEncoding("iso-8859-1");
             var data = OstcUtils.Serialize(order, encoding);
 
-            var validator = new OstcAntragValidator();
+            var validator = new OstcExtraValidator(OstcMessageType.ApplicationData, ExtraTransportDirection.Request);
             var ex = Assert.Throws<XmlSchemaValidationException>(() => validator.Validate(data));
             Assert.Equal("The 'IK_BN' element is invalid - The value '12345678' is invalid according to its datatype 'sType_an10_11' - The actual length is less than the MinLength value.", ex.Message);
         }
