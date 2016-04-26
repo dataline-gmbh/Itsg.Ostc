@@ -50,7 +50,6 @@
     <Compile Include="OstcClient.cs" />
     <Compile Include="OstcClientInfo.cs" />
     <Compile Include="OstcDataType.cs" />
-    <Compile Include="OstcExtraDeserializer.cs" />
     <Compile Include="OstcExtraSerializer.cs" />
     <Compile Include="OstcMessageType.cs" />
     <Compile Include="OstcSender.cs" />

@@ -9,8 +9,6 @@ using ExtraStandard.Validation;
 using Itsg.Ostc2;
 using Itsg.Ostc2.Validator;
 
-using RestSharp.Portable.WebRequest;
-
 using Xunit;
 
 namespace Itsg.Ostc.Test
@@ -64,9 +62,8 @@ namespace Itsg.Ostc.Test
         public async Task LoadCertificatesAsync(OstcListeListe certList)
         {
             var sender = new OstcSender(SenderId.FromBnr("99300006"), "Test");
-            var restClient = new RestClient("https://trustcenter.atosorigin.de/ostcv2test/");
             var cred = new NetworkCredential("dataline", "a5pY_4cm");
-            var client = new OstcClient(sender, restClient, cred, new OstcClientInfo("Dataline", "Dataline Office", 21412))
+            var client = new OstcClient(sender, Network.Base.Test, cred, new OstcClientInfo("Dataline", "Dataline Office", 21412))
             {
                 OstcExtraValidatorFactory = OstcExtraValidator.Factory
             };

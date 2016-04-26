@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -296,6 +295,8 @@ namespace Itsg.Ostc2
 
             var messageData = OstcExtraSerializer.Iso88591.Serialize(message);
             var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.Application));
+            if (_credentials != null)
+                request.Credentials = _credentials;
             using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
             {
                 requestStream.Write(messageData, 0, messageData.Length);
@@ -362,16 +363,24 @@ namespace Itsg.Ostc2
 
             ValidateRequest(message, OstcMessageType.Order);
 
-            var request = new RestRequest(Network.Requests.Order)
+            var messageData = OstcExtraSerializer.Iso88591.Serialize(message);
+            var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.Order));
+            if (_credentials != null)
+                request.Credentials = _credentials;
+            using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
             {
-                Serializer = OstcExtraSerializer.Iso88591
-            };
-            request.AddBody(message);
+                requestStream.Write(messageData, 0, messageData.Length);
+            }
 
-            var response = await Client.Execute<TransportResponseType>(request);
-            var flags = response.Data.TransportHeader.GetFlags().ToList();
-            if (flags.Any(x => x.weight == ExtraFlagWeight.Error))
-                throw new Ostc2Exception(flags);
+            using (var response = await Task.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null))
+            {
+                var serializer = new XmlSerializer(typeof(TransportResponseType));
+                var responseData = (TransportResponseType)serializer.Deserialize(response.GetResponseStream());
+
+                var flags = responseData.TransportHeader.GetFlags().ToList();
+                if (flags.Any(x => x.weight == ExtraFlagWeight.Error))
+                    throw new Ostc2Exception(flags);
+            }
         }
 
         /// <summary>
@@ -415,23 +424,31 @@ namespace Itsg.Ostc2
 
             ValidateRequest(message, OstcMessageType.Key);
 
-            var request = new RestRequest(Network.Requests.KeyRequest)
+            var messageData = OstcExtraSerializer.Iso88591.Serialize(message);
+            var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.KeyRequest));
+            if (_credentials != null)
+                request.Credentials = _credentials;
+            using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
             {
-                Serializer = OstcExtraSerializer.Iso88591
-            };
-            request.AddBody(message);
+                requestStream.Write(messageData, 0, messageData.Length);
+            }
 
-            var response = await Client.Execute<TransportResponseType>(request);
-            var flags = response.Data.TransportHeader.GetFlags().ToList();
-            if (flags.Any(x => x.weight == ExtraFlagWeight.Error))
-                throw new Ostc2Exception(flags);
+            using (var response = await Task.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null))
+            {
+                var serializer = new XmlSerializer(typeof(TransportResponseType));
+                var responseData = (TransportResponseType)serializer.Deserialize(response.GetResponseStream());
 
-            var certData = ((Base64CharSequenceType)((DataType)response.Data.TransportBody.Items[0]).Item).Value;
+                var flags = responseData.TransportHeader.GetFlags().ToList();
+                if (flags.Any(x => x.weight == ExtraFlagWeight.Error))
+                    throw new Ostc2Exception(flags);
 
-            var parser = new X509CertificateParser();
-            var certs = parser.ReadCertificates(certData).Cast<X509Certificate>().ToList();
+                var certData = ((Base64CharSequenceType)((DataType)responseData.TransportBody.Items[0]).Item).Value;
 
-            return certs;
+                var parser = new X509CertificateParser();
+                var certs = parser.ReadCertificates(certData).Cast<X509Certificate>().ToList();
+
+                return certs;
+            }
         }
 
         /// <summary>
@@ -448,25 +465,6 @@ namespace Itsg.Ostc2
             var queryData = OstcUtils.Serialize(query, Encoding.UTF8);
             
             ValidateData(queryData, OstcMessageType.ListData);
-
-            //var enumValue = typeof(OstcListeListe).GetRuntimeField(list.ToString()).GetCustomAttribute<XmlEnumAttribute>().Name;
-            //
-            //var query = new DataRequestType()
-            //{
-            //    version = AbstractMessageTypeVersion.Item11,
-            //    Query = new[]
-            //    {
-            //        new DataRequestArgumentType()
-            //        {
-            //            property = "http://www.itsg.de/ostc/Liste",
-            //            type = XSDPrefixedTypeCodes1.xsstring,
-            //            ItemsElementName = new []{ ItemsChoiceType4.EQ },
-            //            Items = new []{ new OperandType() { Value = enumValue } }
-            //        }
-            //    }
-            //};
-            //
-            //var queryData = OstcUtils.Serialize(query, Encoding.UTF8);
 
             var now = DateTime.Now;
             var message = new TransportRequestType()
@@ -491,20 +489,28 @@ namespace Itsg.Ostc2
 
             ValidateRequest(message, OstcMessageType.List);
 
-            var request = new RestRequest(Network.Requests.ListRequest, Method.POST)
+            var messageData = OstcExtraSerializer.Utf8.Serialize(message);
+            var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.ListRequest));
+            if (_credentials != null)
+                request.Credentials = _credentials;
+            using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
             {
-                Serializer = OstcExtraSerializer.Utf8
-            };
-            request.AddBody(message);
+                requestStream.Write(messageData, 0, messageData.Length);
+            }
 
-            var response = await Client.Execute<TransportResponseType>(request);
-            var flags = response.Data.TransportHeader.GetFlags().ToList();
-            if (flags.Any(x => x.weight == ExtraFlagWeight.Error))
-                throw new Ostc2Exception(flags);
+            using (var response = await Task.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null))
+            {
+                var serializer = new XmlSerializer(typeof(TransportResponseType));
+                var responseData = (TransportResponseType)serializer.Deserialize(response.GetResponseStream());
 
-            var data = ((Base64CharSequenceType)((DataType)response.Data.TransportBody.Items[0]).Item).Value;
-            var result = OstcUtils.ReadCertificates(new MemoryStream(data));
-            return result;
+                var flags = responseData.TransportHeader.GetFlags().ToList();
+                if (flags.Any(x => x.weight == ExtraFlagWeight.Error))
+                    throw new Ostc2Exception(flags);
+
+                var data = ((Base64CharSequenceType)((DataType)responseData.TransportBody.Items[0]).Item).Value;
+                var result = OstcUtils.ReadCertificates(new MemoryStream(data));
+                return result;
+            }
         }
     }
 }
