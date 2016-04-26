@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itsg.Ostc", "Itsg.Ostc\Itsg.Ostc.csproj", "{03A2525F-BD80-418D-B9DF-500BA6DD2CCE}"
 EndProject
@@ -14,11 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itsg.Ostc2", "Itsg.Ostc2\Itsg.Ostc2.csproj", "{CA776F8B-CF00-4D3E-87C4-5AF3E64FA1C3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itsg.Ostc2.Validator", "Itsg.Ostc2.Validator\Itsg.Ostc2.Validator.csproj", "{C471B64D-04F5-40AA-8D26-21E4552FC1FA}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{094BCC53-8A1E-4ADE-9936-139D7D1DE087}"
-	ProjectSection(SolutionItems) = preProject
-		Tools\nuget.exe = Tools\nuget.exe
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D7E2F3EC-2092-4480-8397-39F3CBCE0343}"
 EndProject

@@ -61,12 +61,12 @@
       <HintPath>..\packages\Portable.BouncyCastle-Signed.1.7.0.2\lib\portable-net45+dnxcore50+wp80+win+wpa81+MonoTouch10+MonoAndroid10+xamarinmac20+xamarinios10\crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Dataline.ExtraStandard, Version=0.3.5.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dataline.ExtraStandard.0.3.5\lib\portable45-net45+win8+wp8+wpa81\Dataline.ExtraStandard.dll</HintPath>
+    <Reference Include="Dataline.ExtraStandard, Version=0.3.7.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.0.3.7\lib\portable45-net45+win8+wp8+wpa81\Dataline.ExtraStandard.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Dataline.ExtraStandard.Extra11, Version=0.3.5.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dataline.ExtraStandard.Extra11.0.3.5\lib\portable45-net45+win8+wp8+wpa81\Dataline.ExtraStandard.Extra11.dll</HintPath>
+    <Reference Include="Dataline.ExtraStandard.Extra11, Version=0.3.7.0, Culture=neutral, PublicKeyToken=e7506264c22522b6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dataline.ExtraStandard.Extra11.0.3.7\lib\portable45-net45+win8+wp8+wpa81\Dataline.ExtraStandard.Extra11.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations.PCL328, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
