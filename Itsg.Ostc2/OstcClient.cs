@@ -295,6 +295,7 @@ namespace Itsg.Ostc2
 
             var messageData = OstcExtraSerializer.Iso88591.Serialize(message);
             var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.Application));
+            request.Method = "POST";
             if (_credentials != null)
                 request.Credentials = _credentials;
             using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
@@ -365,6 +366,7 @@ namespace Itsg.Ostc2
 
             var messageData = OstcExtraSerializer.Iso88591.Serialize(message);
             var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.Order));
+            request.Method = "POST";
             if (_credentials != null)
                 request.Credentials = _credentials;
             using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
@@ -426,6 +428,7 @@ namespace Itsg.Ostc2
 
             var messageData = OstcExtraSerializer.Iso88591.Serialize(message);
             var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.KeyRequest));
+            request.Method = "POST";
             if (_credentials != null)
                 request.Credentials = _credentials;
             using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
@@ -491,6 +494,7 @@ namespace Itsg.Ostc2
 
             var messageData = OstcExtraSerializer.Utf8.Serialize(message);
             var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.ListRequest));
+            request.Method = "POST";
             if (_credentials != null)
                 request.Credentials = _credentials;
             using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
