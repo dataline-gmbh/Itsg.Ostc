@@ -5,9 +5,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 using ExtraStandard;
 using ExtraStandard.Extra11;
@@ -24,8 +26,6 @@ using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
-using RestSharp.Portable;
-
 namespace Itsg.Ostc2
 {
     /// <summary>
@@ -38,6 +38,12 @@ namespace Itsg.Ostc2
 
         private static readonly string ExtraProfileOstc = "http://www.extra-standard.de/profile/DEUEVGKV/1.1";
 
+        [NotNull]
+        private readonly Uri _baseUrl;
+
+        [CanBeNull]
+        private readonly ICredentials _credentials;
+
         /// <summary>
         /// Basis-Informationen für den Client
         /// </summary>
@@ -47,8 +53,6 @@ namespace Itsg.Ostc2
         /// Der Nutzer des OSTC-Client
         /// </summary>
         public OstcSender Sender { get; }
-
-        private IRestClient Client { get; }
 
         /// <summary>
         /// Holt oder setzt eine Instanz einer OSTC-eXTra-Validator-Factory über die ein OSTC-eXTra-Validator erstellt werden kann.
@@ -63,23 +67,17 @@ namespace Itsg.Ostc2
         /// Konstruktor
         /// </summary>
         /// <param name="sender">Absender, der den OSTC-Client nutzt (Informationen werden auch für die Zertifikat-Erstellung genutzt)</param>
-        /// <param name="client">IRestClient, der für die Kommunikation mit dem Server verwendet wird</param>
+        /// <param name="baseUrl">Basis-URL, die für die Kommunikation mit dem Server verwendet wird</param>
         /// <param name="credentials">Die Login-Informationen, damit der Client auf den OSTC-Server zugreifen darf</param>
         /// <param name="clientInfo">OSTC-Client-Informationen</param>
-        public OstcClient(OstcSender sender, IRestClient client, ICredentials credentials, OstcClientInfo clientInfo)
+        public OstcClient([NotNull] OstcSender sender, [NotNull] Uri baseUrl, [CanBeNull] ICredentials credentials, [NotNull] OstcClientInfo clientInfo)
         {
             if (clientInfo == null)
                 throw new ArgumentNullException(nameof(clientInfo), "Es müssen Client-Informationen angegeben werden");
             Sender = sender;
             Info = clientInfo;
-            Client = client;
-            if (credentials != null)
-            {
-                Client.Credentials = credentials;
-                Client.Authenticator = new RestSharp.Portable.Authenticators.HttpDigestAuthenticator(AuthHeader.Www);
-            }
-            Client.ClearHandlers();
-            Client.AddHandler("application/octet-stream", new OstcExtraDeserializer());
+            _baseUrl = baseUrl;
+            _credentials = credentials;
         }
 
         private void ValidateRequest(byte[] request, OstcMessageType messageType)
@@ -296,24 +294,30 @@ namespace Itsg.Ostc2
 
             ValidateRequest(message, OstcMessageType.Application);
 
-            var request = new RestRequest(Network.Requests.Application)
+            var messageData = OstcExtraSerializer.Iso88591.Serialize(message);
+            var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.Application));
+            using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
             {
-                Serializer = OstcExtraSerializer.Iso88591
-            };
-            request.AddBody(message);
+                requestStream.Write(messageData, 0, messageData.Length);
+            }
 
-            var response = await Client.Execute<TransportResponseType>(request);
-            var flags = response.Data.TransportHeader.GetFlags().ToList();
-            if (flags.Any(x => x.weight == ExtraFlagWeight.Error))
-                throw new Ostc2Exception(flags);
-
-            return new OstcApplicationResult
+            using (var response = await Task.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null))
             {
-                OrderId = response.Data.TransportHeader.ResponseDetails.ResponseID.Value,
-                Pkcs10 = p10Data.CertRequestDer,
-                RSA = rsaPrivateKey,
-                Hash = p10Data.PublicKeyHashRaw,
-            };
+                var serializer = new XmlSerializer(typeof(TransportResponseType));
+                var responseData = (TransportResponseType)serializer.Deserialize(response.GetResponseStream());
+
+                var flags = responseData.TransportHeader.GetFlags().ToList();
+                if (flags.Any(x => x.weight == ExtraFlagWeight.Error))
+                    throw new Ostc2Exception(flags);
+
+                return new OstcApplicationResult
+                {
+                    OrderId = responseData.TransportHeader.ResponseDetails.ResponseID.Value,
+                    Pkcs10 = p10Data.CertRequestDer,
+                    RSA = rsaPrivateKey,
+                    Hash = p10Data.PublicKeyHashRaw,
+                };
+            }
         }
 
         /// <summary>
@@ -442,8 +446,27 @@ namespace Itsg.Ostc2
                 Liste = list
             };
             var queryData = OstcUtils.Serialize(query, Encoding.UTF8);
-
+            
             ValidateData(queryData, OstcMessageType.ListData);
+
+            //var enumValue = typeof(OstcListeListe).GetRuntimeField(list.ToString()).GetCustomAttribute<XmlEnumAttribute>().Name;
+            //
+            //var query = new DataRequestType()
+            //{
+            //    version = AbstractMessageTypeVersion.Item11,
+            //    Query = new[]
+            //    {
+            //        new DataRequestArgumentType()
+            //        {
+            //            property = "http://www.itsg.de/ostc/Liste",
+            //            type = XSDPrefixedTypeCodes1.xsstring,
+            //            ItemsElementName = new []{ ItemsChoiceType4.EQ },
+            //            Items = new []{ new OperandType() { Value = enumValue } }
+            //        }
+            //    }
+            //};
+            //
+            //var queryData = OstcUtils.Serialize(query, Encoding.UTF8);
 
             var now = DateTime.Now;
             var message = new TransportRequestType()

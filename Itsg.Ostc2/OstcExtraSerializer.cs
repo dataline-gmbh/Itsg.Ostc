@@ -4,15 +4,13 @@ using System.Xml.Serialization;
 
 using ExtraStandard.Extra11;
 
-using RestSharp.Portable;
-
 namespace Itsg.Ostc2
 {
 
     /// <summary>
-    /// Spezieller <see cref="ISerializer"/>, damit die eXTra-Meldung korrekt serialisiert werden kann
+    /// Spezieller Serializer, damit die eXTra-Meldung korrekt serialisiert werden kann
     /// </summary>
-    public class OstcExtraSerializer : ISerializer
+    public class OstcExtraSerializer
     {
         private readonly XmlSerializer _serializer;
 

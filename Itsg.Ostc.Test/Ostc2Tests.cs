@@ -1,11 +1,15 @@
 ﻿using System.IO;
+using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Schema;
 
 using ExtraStandard.Validation;
 
 using Itsg.Ostc2;
 using Itsg.Ostc2.Validator;
+
+using RestSharp.Portable.WebRequest;
 
 using Xunit;
 
@@ -50,6 +54,25 @@ namespace Itsg.Ostc.Test
             var validator = new OstcExtraValidator(OstcMessageType.ApplicationData, ExtraTransportDirection.Request);
             var ex = Assert.Throws<XmlSchemaValidationException>(() => validator.Validate(data));
             Assert.Equal("The 'IK_BN' element is invalid - The value '12345678' is invalid according to its datatype 'sType_an10_11' - The actual length is less than the MinLength value.", ex.Message);
+        }
+
+        [Theory]
+        [InlineData(OstcListeListe.annahmepkcsagv)]
+        [InlineData(OstcListeListe.annahmepkcskey)]
+        [InlineData(OstcListeListe.annahmesha256agv)]
+        [InlineData(OstcListeListe.annahmesha256key)]
+        public async Task LoadCertificatesAsync(OstcListeListe certList)
+        {
+            var sender = new OstcSender(SenderId.FromBnr("99300006"), "Test");
+            var restClient = new RestClient("https://trustcenter.atosorigin.de/ostcv2test/");
+            var cred = new NetworkCredential("dataline", "a5pY_4cm");
+            var client = new OstcClient(sender, restClient, cred, new OstcClientInfo("Dataline", "Dataline Office", 21412))
+            {
+                OstcExtraValidatorFactory = OstcExtraValidator.Factory
+            };
+            var certs = await client.DownloadCertificateListAsync(certList);
+            Assert.NotNull(certs);
+            Assert.NotEqual(0, certs.Count);
         }
     }
 }
