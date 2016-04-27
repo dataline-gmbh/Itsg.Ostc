@@ -79,6 +79,19 @@ namespace Itsg.Ostc2
             _credentials = credentials;
         }
 
+        private HttpWebRequest CreateRequest(Uri uri)
+        {
+            var request = WebRequest.CreateHttp(new Uri(_baseUrl, uri));
+            request.Method = "POST";
+            if (_credentials != null)
+            {
+                request.Credentials = _credentials;
+            }
+            request.Accept = "text/xml";
+            request.ContentType = "text/xml";
+            return request;
+        }
+
         private void ValidateRequest(byte[] request, OstcMessageType messageType)
         {
             Debug.Assert(messageType == OstcMessageType.Application || messageType == OstcMessageType.Key || messageType == OstcMessageType.List || messageType == OstcMessageType.Order);
@@ -294,10 +307,7 @@ namespace Itsg.Ostc2
             ValidateRequest(message, OstcMessageType.Application);
 
             var messageData = OstcExtraSerializer.Iso88591.Serialize(message);
-            var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.Application));
-            request.Method = "POST";
-            if (_credentials != null)
-                request.Credentials = _credentials;
+            var request = CreateRequest(Network.Requests.Application);
             using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
             {
                 requestStream.Write(messageData, 0, messageData.Length);
@@ -365,10 +375,7 @@ namespace Itsg.Ostc2
             ValidateRequest(message, OstcMessageType.Order);
 
             var messageData = OstcExtraSerializer.Iso88591.Serialize(message);
-            var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.Order));
-            request.Method = "POST";
-            if (_credentials != null)
-                request.Credentials = _credentials;
+            var request = CreateRequest(Network.Requests.Order);
             using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
             {
                 requestStream.Write(messageData, 0, messageData.Length);
@@ -427,10 +434,7 @@ namespace Itsg.Ostc2
             ValidateRequest(message, OstcMessageType.Key);
 
             var messageData = OstcExtraSerializer.Iso88591.Serialize(message);
-            var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.KeyRequest));
-            request.Method = "POST";
-            if (_credentials != null)
-                request.Credentials = _credentials;
+            var request = CreateRequest(Network.Requests.KeyRequest);
             using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
             {
                 requestStream.Write(messageData, 0, messageData.Length);
@@ -493,10 +497,7 @@ namespace Itsg.Ostc2
             ValidateRequest(message, OstcMessageType.List);
 
             var messageData = OstcExtraSerializer.Utf8.Serialize(message);
-            var request = WebRequest.CreateHttp(new Uri(_baseUrl, Network.Requests.ListRequest));
-            request.Method = "POST";
-            if (_credentials != null)
-                request.Credentials = _credentials;
+            var request = CreateRequest(Network.Requests.ListRequest);
             using (var requestStream = await Task.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
             {
                 requestStream.Write(messageData, 0, messageData.Length);
