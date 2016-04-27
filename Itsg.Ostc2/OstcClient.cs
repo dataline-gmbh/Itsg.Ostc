@@ -87,8 +87,8 @@ namespace Itsg.Ostc2
             {
                 request.Credentials = _credentials;
             }
-            request.Accept = "text/xml";
-            request.ContentType = "text/xml";
+            request.Accept = "application/xml";
+            request.ContentType = "application/xml";
             return request;
         }
 
@@ -474,6 +474,7 @@ namespace Itsg.Ostc2
             ValidateData(queryData, OstcMessageType.ListData);
 
             var now = DateTime.Now;
+            now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, DateTimeKind.Local).ToUniversalTime();
             var message = new TransportRequestType()
             {
                 version = SupportedVersionsType.Item11,
