@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Schema;
 
@@ -8,6 +10,8 @@ using ExtraStandard.Validation;
 
 using Itsg.Ostc2;
 using Itsg.Ostc2.Validator;
+
+using Polly;
 
 using Xunit;
 
@@ -61,13 +65,21 @@ namespace Itsg.Ostc.Test
         [InlineData(OstcListeListe.annahmesha256key)]
         public async Task LoadCertificatesAsync(OstcListeListe certList)
         {
+            var downloadPolicy = Policy.Handle<WebException>().WaitAndRetryAsync(
+                new[]
+                {
+                    TimeSpan.FromMilliseconds(50),
+                    TimeSpan.FromMilliseconds(100),
+                    TimeSpan.FromMilliseconds(500),
+                    TimeSpan.FromMilliseconds(1000),
+                });
             var sender = new OstcSender(SenderId.FromBnr("99300006"), "Test");
             var cred = new NetworkCredential("dataline", "a5pY_4cm");
             var client = new OstcClient(sender, Network.Base.Test, cred, new OstcClientInfo("Dataline", "Dataline Office", 21412))
             {
                 OstcExtraValidatorFactory = OstcExtraValidator.Factory
             };
-            var certs = await client.DownloadCertificateListAsync(certList);
+            var certs = await downloadPolicy.ExecuteAsync(ct => client.DownloadCertificateListAsync(certList), CancellationToken.None);
             Assert.NotNull(certs);
             Assert.NotEqual(0, certs.Count);
         }
