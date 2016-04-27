@@ -54,7 +54,7 @@ namespace Itsg.Ostc.Test
             Assert.Equal("The 'IK_BN' element is invalid - The value '12345678' is invalid according to its datatype 'sType_an10_11' - The actual length is less than the MinLength value.", ex.Message);
         }
 
-        [Theory]
+        [Theory(Skip = "ITSG-Server-Problem, wenn der Request zu lange dauert")]
         [InlineData(OstcListeListe.annahmepkcsagv)]
         [InlineData(OstcListeListe.annahmepkcskey)]
         [InlineData(OstcListeListe.annahmesha256agv)]
