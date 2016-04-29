@@ -22,7 +22,7 @@ namespace Itsg.Ostc2
         /// <summary>
         /// Standard-Serialisierer für UTF-8
         /// </summary>
-        public static OstcExtraSerializer Utf8 = new OstcExtraSerializer(Encoding.UTF8);
+        public static OstcExtraSerializer Utf8 = new OstcExtraSerializer(new UTF8Encoding(false));
 
         /// <summary>
         /// Konstruktor
