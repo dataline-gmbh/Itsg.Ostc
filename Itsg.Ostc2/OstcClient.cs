@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -37,30 +38,14 @@ namespace Itsg.Ostc2
 
         private static readonly string ExtraProfileOstc = "http://www.extra-standard.de/profile/DEUEVGKV/1.1";
 
+        private static readonly Lazy<PropertyInfo> _servicePointProperty = new Lazy<PropertyInfo>(() => typeof(HttpWebRequest).GetRuntimeProperty("ServicePoint"));
+        private static readonly Lazy<PropertyInfo> _expectProperty = new Lazy<PropertyInfo>(() => _servicePointProperty.Value?.PropertyType.GetRuntimeProperty("Expect100Continue"));
+
         [NotNull]
         private readonly Uri _baseUrl;
 
         [CanBeNull]
         private readonly ICredentials _credentials;
-
-        /// <summary>
-        /// Basis-Informationen für den Client
-        /// </summary>
-        public OstcClientInfo Info { get; }
-
-        /// <summary>
-        /// Der Nutzer des OSTC-Client
-        /// </summary>
-        public OstcSender Sender { get; }
-
-        /// <summary>
-        /// Holt oder setzt eine Instanz einer OSTC-eXTra-Validator-Factory über die ein OSTC-eXTra-Validator erstellt werden kann.
-        /// </summary>
-        /// <remarks>
-        /// Standardmäßig ist diese Eigenschaft nicht gesetzt.
-        /// </remarks>
-        [CanBeNull]
-        public IValidatorFactory OstcExtraValidatorFactory { get; set; }
 
         /// <summary>
         /// Konstruktor
@@ -79,6 +64,27 @@ namespace Itsg.Ostc2
             _credentials = credentials;
         }
 
+        /// <summary>
+        /// Basis-Informationen für den Client
+        /// </summary>
+        [NotNull]
+        public OstcClientInfo Info { get; }
+
+        /// <summary>
+        /// Der Nutzer des OSTC-Client
+        /// </summary>
+        [NotNull]
+        public OstcSender Sender { get; }
+
+        /// <summary>
+        /// Holt oder setzt eine Instanz einer OSTC-eXTra-Validator-Factory über die ein OSTC-eXTra-Validator erstellt werden kann.
+        /// </summary>
+        /// <remarks>
+        /// Standardmäßig ist diese Eigenschaft nicht gesetzt.
+        /// </remarks>
+        [CanBeNull]
+        public IValidatorFactory OstcExtraValidatorFactory { get; set; }
+
         private HttpWebRequest CreateRequest(Uri uri)
         {
             var request = WebRequest.CreateHttp(new Uri(_baseUrl, uri));
@@ -89,6 +95,11 @@ namespace Itsg.Ostc2
             }
             request.Accept = "application/xml";
             request.ContentType = "application/xml";
+            if (_servicePointProperty.Value != null)
+            {
+                var sp = _servicePointProperty.Value.GetValue(request);
+                _expectProperty.Value?.SetValue(sp, false);
+            }
             return request;
         }
 
