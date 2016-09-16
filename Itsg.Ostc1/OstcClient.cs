@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -143,6 +144,8 @@ namespace Itsg.Ostc1
                     var keyEntry = pfx.GetKey(alias);
                     var certificate = certEntry.Certificate;
                     var key = keyEntry.Key;
+                    if (certStore == null)
+                        throw new ArgumentNullException(nameof(certStore));
                     var certChain = certStore.GetChain(certificate).ToList();
                     System.Diagnostics.Debug.Assert(certChain[0].SubjectDN.Equivalent(certificate.SubjectDN));
                     certChain.RemoveAt(0);
@@ -268,42 +271,36 @@ namespace Itsg.Ostc1
         /// </summary>
         /// <param name="listType">Art der Zertifikat-Liste</param>
         /// <param name="certType">Art des Zertifikats (SHA1 oder SHA256)</param>
-        /// <param name="preferFtp">FTP-Server-Download bevorzugen?</param>
         /// <returns>Liste der Zertifikate</returns>
-        public async Task<IReadOnlyList<X509Certificate>> DownloadCertificateListAsync(OstcCertificateListType listType, OstcCertificateType certType, bool preferFtp = true)
+        public async Task<IReadOnlyList<X509Certificate>> DownloadCertificateListAsync(OstcCertificateListType listType, OstcCertificateType certType)
         {
-            var linkContents = new List<string>();
+            Uri downloadUrl = null;
             switch (listType)
             {
                 case OstcCertificateListType.Receiver:
                     if ((certType & OstcCertificateType.Sha1) == OstcCertificateType.Sha1)
-                        linkContents.Add("annahme-pkcs");
-                    if ((certType & OstcCertificateType.Sha256) == OstcCertificateType.Sha256)
-                        linkContents.Add("annahme-sha256");
+                        downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/annahme-pkcs.agv");
+                    else if ((certType & OstcCertificateType.Sha256) == OstcCertificateType.Sha256)
+                        downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/annahme-sha256.agv");
                     break;
                 case OstcCertificateListType.Complete:
                     if (certType == (OstcCertificateType.Sha1 | OstcCertificateType.Sha256))
                     {
-                        linkContents.Add("gesamt-pkcs");
+                        downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/gesamt-pkcs.agv");
                     }
                     else
                     {
                         if ((certType & OstcCertificateType.Sha1) == OstcCertificateType.Sha1)
-                            linkContents.Add("gesamt-sha1");
+                            downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/gesamt-sha1.agv");
                         if ((certType & OstcCertificateType.Sha256) == OstcCertificateType.Sha256)
-                            linkContents.Add("gesamt-sha256");
+                            downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/gesamt-sha256.agv");
                     }
                     break;
             }
 
-            var data = await DownloadAsync(
-                linkContents,
-                downloadUrl =>
-                {
-                    var path = downloadUrl.GetComponents(UriComponents.Path, UriFormat.Unescaped);
-                    return path.EndsWith(".agv", StringComparison.OrdinalIgnoreCase);
-                },
-                preferFtp);
+            Debug.Assert(downloadUrl != null);
+
+            var data = await DownloadAsync(downloadUrl);
 
             var allCerts = new List<X509Certificate>();
             allCerts.AddRange(OstcUtils.ReadCertificates(new MemoryStream(data)));
@@ -320,20 +317,15 @@ namespace Itsg.Ostc1
         /// <returns>Zertifikatsperrliste</returns>
         public async Task<X509Crl> DownloadCrlAsync(OstcCertificateType certType, bool preferFtp = true)
         {
-            var linkContents = new List<string>();
+            Uri downloadUrl = null;
             if ((certType & OstcCertificateType.Sha1) == OstcCertificateType.Sha1)
-                linkContents.Add("sperrliste-ag");
-            if ((certType & OstcCertificateType.Sha256) == OstcCertificateType.Sha256)
-                linkContents.Add("sperrliste-ag-sha256");
+                downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/sperrliste-ag.crl");
+            else if ((certType & OstcCertificateType.Sha256) == OstcCertificateType.Sha256)
+                downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/sperrliste-ag-sha256.crl");
 
-            var data = await DownloadAsync(
-                linkContents,
-                downloadUrl =>
-                {
-                    var path = downloadUrl.GetComponents(UriComponents.Path, UriFormat.Unescaped);
-                    return path.EndsWith(".crl", StringComparison.OrdinalIgnoreCase);
-                },
-                preferFtp);
+            Debug.Assert(downloadUrl != null);
+
+            var data = await DownloadAsync(downloadUrl);
 
             var crlParser = new X509CrlParser();
             var crl = crlParser.ReadCrl(data);
@@ -344,98 +336,36 @@ namespace Itsg.Ostc1
         /// <summary>
         /// Zertifikat-Liste vom OSTC-Server laden
         /// </summary>
-        /// <param name="linkContents">Die Texte die im Link vorkommen müssen</param>
-        /// <param name="downloadUrlsFilter">Filterung der Download-URLs</param>
-        /// <param name="preferFtp">FTP-Server-Download bevorzugen?</param>
+        /// <param name="downloadUrl">Die URL von der die Daten geladen werden sollen</param>
         /// <returns>Die geladenen Daten</returns>
-        private async Task<byte[]> DownloadAsync(IEnumerable<string> linkContents, Func<Uri, bool> downloadUrlsFilter, bool preferFtp = true)
+        private async Task<byte[]> DownloadAsync(Uri downloadUrl)
         {
-            var url = new Uri("http://www.itsg.de/tc_keys_arbeitgeberverfahren.ITSG");
-            var webPageRequest = new RestRequest(url);
-            var webPageResponse = await Client.Execute(webPageRequest);
-            var webPage = webPageResponse.RawBytes;
-            var responseXml = SgmlReader.Parse(new MemoryStream(webPage));
-
-            var downloadUrls = new List<Uri>();
-
-            var ns = XNamespace.Get("http://www.w3.org/1999/xhtml");
-            foreach (var linkContent in linkContents)
+            if (string.Equals(downloadUrl.Scheme, "ftp", StringComparison.OrdinalIgnoreCase))
             {
-                var httpDownloadUrl = responseXml
-                    .Descendants(ns + "a")
-                    .Where(x => x.Value.Trim() == "HTTP-Server")
-                    .Where(x => x.Attributes("href").Any(y => y.Value.Contains(linkContent)))
-                    .Select(x => x.Attribute("href"))
-                    .FirstOrDefault();
-                var ftpDownloadUrl = responseXml
-                    .Descendants(ns + "a")
-                    .Where(x => x.Value.Trim() == "FTP-Server")
-                    .Where(x => x.Attributes("href").Any(y => y.Value.Contains(linkContent)))
-                    .Select(x => x.Attribute("href"))
-                    .FirstOrDefault();
-                if (preferFtp)
+                // Special handling for FTP access
+                var downloadRequest = WebRequest.Create(downloadUrl);
+                var downloadResponse = await Task.Factory.FromAsync(downloadRequest.BeginGetResponse, downloadRequest.EndGetResponse, null);
+                using (var temp = new MemoryStream())
                 {
-                    if (ftpDownloadUrl != null)
-                        downloadUrls.Add(new Uri(url, ftpDownloadUrl.Value));
-                    if (httpDownloadUrl != null)
-                        downloadUrls.Add(new Uri(url, httpDownloadUrl.Value));
-                }
-                else
-                {
-                    if (httpDownloadUrl != null)
-                        downloadUrls.Add(new Uri(url, httpDownloadUrl.Value));
-                    if (ftpDownloadUrl != null)
-                        downloadUrls.Add(new Uri(url, ftpDownloadUrl.Value));
-                }
-            }
-
-            var usefulDownloadUrls = downloadUrls.Where(downloadUrlsFilter).ToList();
-
-            var exceptions = new List<Exception>();
-            foreach (var usefulDownloadUrl in usefulDownloadUrls)
-            {
-                try
-                {
-                    if (string.Equals(usefulDownloadUrl.Scheme, "ftp", StringComparison.OrdinalIgnoreCase))
+                    var responseStream = downloadResponse.GetResponseStream();
+                    var buffer = new byte[100 * 1024];
+                    int readCount;
+                    //var totalReadCount = 0;
+                    while ((readCount = responseStream.Read(buffer, 0, buffer.Length)) != 0)
                     {
-                        // Special handling for FTP access
-                        var downloadRequest = WebRequest.Create(usefulDownloadUrl);
-                        var downloadResponse = await Task.Factory.FromAsync<WebResponse>(downloadRequest.BeginGetResponse, downloadRequest.EndGetResponse, null);
-                        using (var temp = new MemoryStream())
-                        {
-                            var responseStream = downloadResponse.GetResponseStream();
-                            var buffer = new byte[100 * 1024];
-                            int readCount;
-                            //var totalReadCount = 0;
-                            while ((readCount = responseStream.Read(buffer, 0, buffer.Length)) != 0)
-                            {
-                                temp.Write(buffer, 0, readCount);
-                                //totalReadCount += readCount;
-                                //Debug.WriteLine(totalReadCount);
-                            }
-                            return temp.ToArray();
-                        }
+                        temp.Write(buffer, 0, readCount);
+                        //totalReadCount += readCount;
+                        //Debug.WriteLine(totalReadCount);
                     }
-                    else
-                    {
-                        var downloadRequest = new RestRequest(usefulDownloadUrl);
-                        var downloadResponse = await Client.Execute(downloadRequest);
-                        return downloadResponse.RawBytes;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    exceptions.Add(ex);
+                    return temp.ToArray();
                 }
             }
-
-            if (exceptions.Count != 0)
+            else
             {
-                // Unable to download certificates
-                throw new AggregateException(exceptions);
+                var downloadRequest = new RestRequest(downloadUrl);
+                var downloadResponse = await Client.Execute(downloadRequest);
+                return downloadResponse.RawBytes;
             }
-
-            return null;
         }
     }
 }
