@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>DATALINE GmbH &amp; Co. KG</authors>
+    <owners>Fubar Development Junker</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/dataline-gmbh/Itsg.Ostc</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Client für das Laden der Empfänger-Zertifikate</description>
+    <releaseNotes>Erstes Release</releaseNotes>
+    <copyright>Copyright 2016 DATALINE GmbH &amp; Co. KG</copyright>
+    <tags>ITSG OSTC Zertifikate Empfänger</tags>
+  </metadata>
+</package>
