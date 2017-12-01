@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Itsg.Ostc.Certificates\Itsg.Ostc.Certificates.csproj" />
     <ProjectReference Include="..\..\src\Itsg.Ostc1.Validator\Itsg.Ostc1.Validator.csproj" />
     <ProjectReference Include="..\..\src\Itsg.Ostc2.Validator\Itsg.Ostc2.Validator.csproj" />
   </ItemGroup>

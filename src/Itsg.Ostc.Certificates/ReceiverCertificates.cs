@@ -13,7 +13,7 @@ namespace Itsg.Ostc.Certificates
     /// <summary>
     /// Die Empfänger-Zertifikate, die von der ITSG zur Verfügung gestellt werden
     /// </summary>
-    public class ReceiverCertificates
+    public sealed class ReceiverCertificates
     {
         private readonly X509Certificate2[] _rootCertificates;
         private readonly X509Certificate2Collection _intermediateCertificates;
@@ -26,7 +26,7 @@ namespace Itsg.Ostc.Certificates
         {
             var receiverCertificates = new Dictionary<string, X509Certificate2>();
             var rootCertificates = new List<X509Certificate2>();
-            var intermediateCertificates = new X509Certificate2Collection();
+            var immedCerts = new List<X509Certificate2>();
             foreach (var certificate in certificates)
             {
                 var key = GetKey(certificate);
@@ -38,7 +38,7 @@ namespace Itsg.Ostc.Certificates
                     }
                     else
                     {
-                        intermediateCertificates.Add(certificate);
+                        immedCerts.Add(certificate);
                     }
                 }
                 else
@@ -48,7 +48,9 @@ namespace Itsg.Ostc.Certificates
             }
 
             _rootCertificates = rootCertificates.ToArray();
-            _intermediateCertificates = intermediateCertificates;
+            var immedCertArray = immedCerts.ToArray();
+            _intermediateCertificates = new X509Certificate2Collection(immedCertArray);
+            IntermediateCertificates = immedCertArray;
             Certificates = receiverCertificates;
         }
 
@@ -56,6 +58,11 @@ namespace Itsg.Ostc.Certificates
         /// Holt die Root-Zertifikate
         /// </summary>
         public IReadOnlyCollection<X509Certificate2> RootCertificates => _rootCertificates;
+
+        /// <summary>
+        /// Holt die Zwischenzertifikate
+        /// </summary>
+        public IReadOnlyCollection<X509Certificate2> IntermediateCertificates { get; }
 
         /// <summary>
         /// Holt die Zuordnung von Betriebsnummern zu Empfänger-Zertifikaten
@@ -68,7 +75,7 @@ namespace Itsg.Ostc.Certificates
         /// <param name="certificate">Das Zertifikat für das die Zertifikatskette ermittelt werden soll</param>
         /// <returns>Die Zertifikate, die - zusätzlich zum übergebenen <paramref name="certificate"/> - die
         /// Zertifikatskette bilden oder <code>null</code>, falls keine Zertifikatskette aufgebaut werden konnte.</returns>
-        public X509Certificate2Collection GetCertificateChain(X509Certificate2 certificate)
+        public CertificateChain GetCertificateChain(X509Certificate2 certificate)
         {
             var chain = new X509Chain();
 #if !NET45
@@ -84,7 +91,8 @@ namespace Itsg.Ostc.Certificates
                 if (chain.ChainStatus.Any(x => x.Status != X509ChainStatusFlags.NoError))
                     return null;
                 var chainCerts = chain.ChainElements.Cast<X509ChainElement>().Skip(1).Select(x => x.Certificate).ToArray();
-                return new X509Certificate2Collection(chainCerts);
+                var result = new CertificateChain(certificate, chainCerts);
+                return result;
             }
         }
 
@@ -97,6 +105,18 @@ namespace Itsg.Ostc.Certificates
         {
             var sourceUrl = "https://trustcenter-data.itsg.de/agv/annahme-sha256.agv";
             var certificates = await LoadReceiverCertificates(sourceUrl, proxy).ConfigureAwait(false);
+            return new ReceiverCertificates(certificates);
+        }
+
+        /// <summary>
+        /// Laden der Zertifikatskette aus dem Internet
+        /// </summary>
+        /// <param name="client">Der HttpClient, der zu verwenden ist</param>
+        /// <returns>Die X509-Zertifikate, die von der Web-Seite geladen wurden</returns>
+        public static async Task<ReceiverCertificates> Load(HttpClient client)
+        {
+            var sourceUrl = "https://trustcenter-data.itsg.de/agv/annahme-sha256.agv";
+            var certificates = await LoadReceiverCertificates(client, sourceUrl).ConfigureAwait(false);
             return new ReceiverCertificates(certificates);
         }
 
@@ -126,11 +146,16 @@ namespace Itsg.Ostc.Certificates
                 clientHandler.Proxy = proxy;
             using (var client = new HttpClient(clientHandler))
             {
-                var text = await client.GetStringAsync(url).ConfigureAwait(false);
-                using (var reader = new StringReader(text))
-                {
-                    return Read(reader);
-                }
+                return await LoadReceiverCertificates(client, url).ConfigureAwait(false);
+            }
+        }
+
+        private static async Task<IReadOnlyCollection<X509Certificate2>> LoadReceiverCertificates(HttpClient client, string url)
+        {
+            var text = await client.GetStringAsync(url).ConfigureAwait(false);
+            using (var reader = new StringReader(text))
+            {
+                return Read(reader);
             }
         }
 
