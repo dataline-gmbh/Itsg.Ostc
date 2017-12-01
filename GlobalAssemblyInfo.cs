@@ -11,7 +11,7 @@ using System;
 [assembly: AssemblyConfiguration("Debug")]
 #endif
 [assembly: AssemblyCompany("DATALINE GmbH & Co. KG")]
-[assembly: AssemblyCopyright("Copyright © 2015 DATALINE GmbH & Co. KG")]
+[assembly: AssemblyCopyright("Copyright © 2017 DATALINE GmbH & Co. KG")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("de")]
@@ -26,7 +26,7 @@ using System;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.*")]
+[assembly: AssemblyVersion("0.1.0")]
 [assembly: AssemblyFileVersion("0.1.0")]
 [assembly: AssemblyInformationalVersion("0.1.0")]
 

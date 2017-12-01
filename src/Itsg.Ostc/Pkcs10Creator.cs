@@ -3,6 +3,7 @@
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Pkcs;
@@ -85,7 +86,8 @@ namespace Itsg.Ostc
                 keyPairGen.Init(new KeyGenerationParameters(rng, 2048));
                 rsaKeyPair = keyPairGen.GenerateKeyPair();
             }
-            var csr = new Pkcs10CertificationRequest(sigAlgoName, subject, rsaKeyPair.Public, null, rsaKeyPair.Private);
+
+            var csr = new Pkcs10CertificationRequest(new Asn1SignatureFactory(sigAlgoName, rsaKeyPair.Private), subject, rsaKeyPair.Public, null, rsaKeyPair.Private);
             
             var outputCsrPem = new StringWriter();
             {

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <VersionPrefix>0.2.0</VersionPrefix>
+    <Copyright>Copyright © 2015-2017 DATALINE GmbH &amp; Co. KG</Copyright>
+    <Authors>DATALINE GmbH &amp; Co. KG</Authors>
+    <PackageLicenseUrl>https://github.com/dataline-gmbh/Itsg.Ostc/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageReleaseNotes>- Umstellung auf .NET Core Tooling 2
+- Unterstützung für .NET Standard 2.0</PackageReleaseNotes>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/dataline-gmbh/Itsg.Ostc</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dataline-gmbh/Itsg.Ostc.git</RepositoryUrl>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Exclude="bin\**;obj\**;**\*.xproj;packages\**" Link="Properties\GlobalAssemblyInfo.cs" />
+    <None Include="..\..\*.md">
+      <PackagePath>/</PackagePath>
+      <Pack>true</Pack>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>none</DebugType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+</Project>

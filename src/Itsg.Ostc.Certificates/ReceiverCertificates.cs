@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,20 +70,10 @@ namespace Itsg.Ostc.Certificates
         /// Zertifikatskette bilden oder <code>null</code>, falls keine Zertifikatskette aufgebaut werden konnte.</returns>
         public X509Certificate2Collection GetCertificateChain(X509Certificate2 certificate)
         {
-#if NET45
             var chain = new X509Chain();
-            chain.ChainPolicy.ExtraStore.AddRange(_rootCertificates);
-            chain.ChainPolicy.ExtraStore.AddRange(_intermediateCertificates);
-            chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
-            chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
-            if (!chain.Build(certificate))
-                return null;
-            if (chain.ChainStatus.Any(x => x.Status != X509ChainStatusFlags.NoError))
-                return null;
-            var chainCerts = chain.ChainElements.Cast<X509ChainElement>().Skip(1).Select(x => x.Certificate).ToArray();
-            return new X509Certificate2Collection(chainCerts);
-#else
-            using (var chain = new X509Chain())
+#if !NET45
+            using (chain)
+#endif
             {
                 chain.ChainPolicy.ExtraStore.AddRange(_rootCertificates);
                 chain.ChainPolicy.ExtraStore.AddRange(_intermediateCertificates);
@@ -95,20 +86,16 @@ namespace Itsg.Ostc.Certificates
                 var chainCerts = chain.ChainElements.Cast<X509ChainElement>().Skip(1).Select(x => x.Certificate).ToArray();
                 return new X509Certificate2Collection(chainCerts);
             }
-#endif
         }
 
         /// <summary>
         /// Laden der Zertifikatskette aus dem Internet
         /// </summary>
-        /// <param name="useSha256">Laden der RSA-SHA256-Zertifikate</param>
         /// <param name="proxy">Der Web-Proxy, der zu verwenden ist</param>
         /// <returns>Die X509-Zertifikate, die von der Web-Seite geladen wurden</returns>
-        public static async Task<ReceiverCertificates> Load(bool useSha256, IWebProxy proxy = null)
+        public static async Task<ReceiverCertificates> Load(IWebProxy proxy = null)
         {
-            var sourceUrl = useSha256
-                ? "ftp://trustcenter-ftp.itsg.de/agv/annahme-sha256.agv"
-                : "ftp://trustcenter-ftp.itsg.de/agv/annahme-pkcs.agv";
+            var sourceUrl = "https://trustcenter-data.itsg.de/agv/annahme-sha256.agv";
             var certificates = await LoadReceiverCertificates(sourceUrl, proxy).ConfigureAwait(false);
             return new ReceiverCertificates(certificates);
         }
@@ -134,11 +121,12 @@ namespace Itsg.Ostc.Certificates
 
         private static async Task<IReadOnlyCollection<X509Certificate2>> LoadReceiverCertificates(string url, IWebProxy proxy)
         {
-            using (var client = new WebClient())
+            var clientHandler = new HttpClientHandler();
+            if (proxy != null)
+                clientHandler.Proxy = proxy;
+            using (var client = new HttpClient(clientHandler))
             {
-                if (proxy != null)
-                    client.Proxy = proxy;
-                var text = await client.DownloadStringTaskAsync(url).ConfigureAwait(false);
+                var text = await client.GetStringAsync(url).ConfigureAwait(false);
                 using (var reader = new StringReader(text))
                 {
                     return Read(reader);

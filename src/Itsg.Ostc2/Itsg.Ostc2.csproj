@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net45;netstandard1.3;netstandard2.0</TargetFrameworks>
+    <Description>Client für die OSTC-Schnittstelle V2</Description>
+    <PackageTags>ITSG;OSTC;OSTCv2</PackageTags>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Global.props" />
+
+  <ItemGroup>
+    <PackageReference Include="Dataline.ExtraStandard.Extra11" Version="0.4.10" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <PackageReference Include="System.Net.Requests" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Itsg.Ostc\Itsg.Ostc.csproj" />
+  </ItemGroup>
+</Project>

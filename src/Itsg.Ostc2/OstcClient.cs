@@ -38,7 +38,21 @@ namespace Itsg.Ostc2
 
         private static readonly string ExtraProfileOstc = "http://www.extra-standard.de/profile/DEUEVGKV/1.1";
 
-        private static readonly Lazy<PropertyInfo> _servicePointProperty = new Lazy<PropertyInfo>(() => typeof(HttpWebRequest).GetRuntimeProperty("ServicePoint"));
+        private static readonly Lazy<PropertyInfo> _servicePointProperty = new Lazy<PropertyInfo>(() =>
+        {
+            try
+            {
+                var prop = typeof(HttpWebRequest).GetRuntimeProperty("ServicePoint");
+                var request = WebRequest.CreateHttp("https://google.com");
+                // Kann mit einer PlatformNotSupportedException fehlschlagen
+                prop.GetValue(request);
+                return prop;
+            }
+            catch (TargetInvocationException ex) when (ex.InnerException is PlatformNotSupportedException)
+            {
+                return null;
+            }
+        });
         private static readonly Lazy<PropertyInfo> _expectProperty = new Lazy<PropertyInfo>(() => _servicePointProperty.Value?.PropertyType.GetRuntimeProperty("Expect100Continue"));
 
         [NotNull]

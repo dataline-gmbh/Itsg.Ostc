@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <Description>Validator für die OSTC-Schnittstelle V2</Description>
+    <PackageTags>ITSG;OSTC;OSTCv2</PackageTags>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Global.props" />
+
+  <ItemGroup>
+    <EmbeddedResource Include="Schema\*.xsd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dataline.ExtraStandard.Validation" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Itsg.Ostc2\Itsg.Ostc2.csproj" />
+  </ItemGroup>
+</Project>

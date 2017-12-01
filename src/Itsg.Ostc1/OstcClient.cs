@@ -5,6 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -17,9 +19,6 @@ using JetBrains.Annotations;
 
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.X509;
-
-using RestSharp.Portable;
-using RestSharp.Portable.Authenticators;
 
 namespace Itsg.Ostc1
 {
@@ -38,22 +37,38 @@ namespace Itsg.Ostc1
         };
 
         [NotNull]
-        private IRestClient Client { get; }
+        private readonly HttpClient _client;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
-        /// <param name="client">IRestClient, der für die Kommunikation mit dem Server verwendet wird</param>
-        /// <param name="credentials">Die Login-Informationen, damit der Client auf den OSTC-Server zugreifen darf</param>
-        public OstcClient([NotNull] IRestClient client, [CanBeNull] ICredentials credentials)
+        /// <param name="client">HttpClient, der für die Kommunikation mit dem Server verwendet wird</param>
+        public OstcClient([NotNull] HttpClient client)
         {
-            Client = client;
+            _client = client;
+        }
+
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="messageHandler">HttpClientHandler, der für die Kommunikation mit dem Server verwendet wird</param>
+        /// <param name="baseUrl">Die Basis-Adresse des zu verwendenden Servers</param>
+        public OstcClient([NotNull] HttpMessageHandler messageHandler, [NotNull] Uri baseUrl)
+            : this(new HttpClient(messageHandler) { BaseAddress = baseUrl, })
+        {
+        }
+
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="baseUrl">Die Basis-Adresse des zu verwendenden Servers</param>
+        /// <param name="credentials">Die Login-Informationen, damit der Client auf den OSTC-Server zugreifen darf</param>
+        public OstcClient([NotNull] Uri baseUrl, [CanBeNull] ICredentials credentials = null)
+        {
+            var handler = new HttpClientHandler();
             if (credentials != null)
-            {
-                Client.Authenticator = new HttpDigestAuthenticator(AuthHeader.Www);
-                Client.Credentials = credentials;
-            }
-            Client.ClearHandlers();
+                handler.Credentials = credentials;
+            _client = new HttpClient(handler);
         }
 
         private static XDocument DecodeResponse(Stream stream)
@@ -147,7 +162,7 @@ namespace Itsg.Ostc1
                     if (certStore == null)
                         throw new ArgumentNullException(nameof(certStore));
                     var certChain = certStore.GetChain(certificate).ToList();
-                    System.Diagnostics.Debug.Assert(certChain[0].SubjectDN.Equivalent(certificate.SubjectDN));
+                    Debug.Assert(certChain[0].SubjectDN.Equivalent(certificate.SubjectDN));
                     certChain.RemoveAt(0);
                     applicationData = OstcUtils.SignData(applicationData, key, certificate, certChain);
                     var receiverCert = certStore.GetCertificate(senderId.CommunicationServerReceiver);
@@ -164,21 +179,48 @@ namespace Itsg.Ostc1
             var p10FileName = $"{senderId.Id}.p10";
             var xmlFileName = $"{senderId}_{date:ddMMyyyy}.xml";
 
-            var requestSendApp = new RestRequest(Network.Requests.Upload);
-            requestSendApp.AddParameter("MAX_FILE_SIZE_XML", "4000");
-            requestSendApp.AddFile("xml_Datei", applicationData, xmlFileName, mimeType);
-            requestSendApp.AddParameter("MAX_FILE_SIZE_P10", "4000");
-            requestSendApp.AddFile("p10_Datei", p10Data.CertRequestDer, p10FileName);
+            var reqSendAppContent = new MultipartFormDataContent
+            {
+                { new StringContent("4000"), "MAX_FILE_SIZE_XML" },
+                {
+                    new ByteArrayContent(applicationData)
+                    {
+                        Headers = {
+                            ContentType = MediaTypeHeaderValue.Parse(mimeType),
+                        }
+                    },
+                    "xml_Datei",
+                    xmlFileName
+                },
+                { new StringContent("4000"), "MAX_FILE_SIZE_P10" },
+                {
+                    new ByteArrayContent(p10Data.CertRequestDer)
+                    {
+                        Headers = {
+                            ContentType = MediaTypeHeaderValue.Parse("application/octet-stream"),
+                        }
+                    },
+                    "p10_Datei",
+                    p10FileName
+                }
+            };
 
-            var responseSendApp = await Client.Execute(requestSendApp);
-            var responseHtml = DecodeResponse(new MemoryStream(responseSendApp.RawBytes));
+            var requestSendApp = new HttpRequestMessage(HttpMethod.Post, Network.Requests.Upload)
+            {
+                Content = reqSendAppContent,
+            };
+
+            var responseSendApp = await _client.SendAsync(requestSendApp);
+            responseSendApp.EnsureSuccessStatusCode();
+
+            var responseHtml = DecodeResponse(await responseSendApp.Content.ReadAsStreamAsync());
             var responseFileUrl = GetResponseFileUrl(responseHtml);
             if (responseFileUrl == null)
                 throw new OstcException("Von der ITSG wurde kein Pfad zu einer Rückmeldungs-Datei geliefert.");
 
-            var downloadRequest = new RestRequest(responseFileUrl, Method.GET);
-            var downloadResponse = await Client.Execute(downloadRequest);
-            var resultData = downloadResponse.RawBytes;
+            var downloadResponse = await _client.GetAsync(responseFileUrl);
+            downloadResponse.EnsureSuccessStatusCode();
+            var resultData = await downloadResponse.Content.ReadAsByteArrayAsync();
 
             var resultXml = XDocument.Load(new MemoryStream(resultData));
 
@@ -225,17 +267,18 @@ namespace Itsg.Ostc1
         /// <remarks>Die Auftrags-ID wird von der Funktion <see cref="SendApplicationAsync(OstcAntrag,Pkcs10Data,IOstcCertificateStore,Pkcs12Store)"/> zurückgeliefert</remarks>
         public async Task<OstcOrderResult> QueryOrderStatusAsync(SenderId sender, string orderId)
         {
-            var request = new RestRequest(Network.Requests.Order);
-            request.AddParameter("ik_bn", sender.Id);
-            request.AddParameter("id", orderId);
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{Network.Requests.Order}?ik_bn={sender.Id}&id={orderId}");
 
-            var response = await Client.Execute(request);
-            var responseHtml = DecodeResponse(new MemoryStream(response.RawBytes));
+            var response = await _client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var responseHtml = DecodeResponse(await response.Content.ReadAsStreamAsync());
+            var responseUri = response.Headers.Location ?? request.RequestUri;
 
             OstcOrderResult result =
                 (from parser in OrderStatusParsers
                  where parser.IsApplicable(responseHtml)
-                 select parser.ExtractResult(response.ResponseUri, responseHtml))
+                 select parser.ExtractResult(responseUri, responseHtml))
                     .FirstOrDefault()
                 ?? new OstcOrderResult()
                 {
@@ -256,9 +299,9 @@ namespace Itsg.Ostc1
         /// </remarks>
         public async Task<IReadOnlyList<X509Certificate>> DownloadCertificateAsync(Uri downloadUrl)
         {
-            var request = new RestRequest(downloadUrl);
-            var response = await Client.Execute(request);
-            var certData = response.RawBytes;
+            var response = await _client.GetAsync(downloadUrl);
+            response.EnsureSuccessStatusCode();
+            var certData = await response.Content.ReadAsByteArrayAsync();
             
             var parser = new X509CertificateParser();
             var certs = parser.ReadCertificates(certData).Cast<X509Certificate>().ToList();
@@ -278,22 +321,19 @@ namespace Itsg.Ostc1
             switch (listType)
             {
                 case OstcCertificateListType.Receiver:
-                    if ((certType & OstcCertificateType.Sha1) == OstcCertificateType.Sha1)
-                        downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/annahme-pkcs.agv");
-                    else if ((certType & OstcCertificateType.Sha256) == OstcCertificateType.Sha256)
-                        downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/annahme-sha256.agv");
+                    downloadUrl = new Uri("https://trustcenter-data.itsg.de/agv/annahme-sha256.agv");
                     break;
                 case OstcCertificateListType.Complete:
+#pragma warning disable CS0618 // Typ oder Element ist veraltet
                     if (certType == (OstcCertificateType.Sha1 | OstcCertificateType.Sha256))
+#pragma warning restore CS0618 // Typ oder Element ist veraltet
                     {
-                        downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/gesamt-pkcs.agv");
+                        // Mehr als nur SHA256
+                        downloadUrl = new Uri("https://trustcenter-data.itsg.de/agv/gesamt-pkcs.agv");
                     }
                     else
                     {
-                        if ((certType & OstcCertificateType.Sha1) == OstcCertificateType.Sha1)
-                            downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/gesamt-sha1.agv");
-                        if ((certType & OstcCertificateType.Sha256) == OstcCertificateType.Sha256)
-                            downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/gesamt-sha256.agv");
+                        downloadUrl = new Uri("https://trustcenter-data.itsg.de/agv/gesamt-sha256.agv");
                     }
                     break;
             }
@@ -317,11 +357,7 @@ namespace Itsg.Ostc1
         /// <returns>Zertifikatsperrliste</returns>
         public async Task<X509Crl> DownloadCrlAsync(OstcCertificateType certType, bool preferFtp = true)
         {
-            Uri downloadUrl = null;
-            if ((certType & OstcCertificateType.Sha1) == OstcCertificateType.Sha1)
-                downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/sperrliste-ag.crl");
-            else if ((certType & OstcCertificateType.Sha256) == OstcCertificateType.Sha256)
-                downloadUrl = new Uri("ftp://trustcenter-ftp.itsg.de/agv/sperrliste-ag-sha256.crl");
+            Uri downloadUrl = new Uri("https://trustcenter-data.itsg.de/agv/sperrliste-ag-sha256.crl");
 
             Debug.Assert(downloadUrl != null);
 
@@ -340,32 +376,9 @@ namespace Itsg.Ostc1
         /// <returns>Die geladenen Daten</returns>
         private async Task<byte[]> DownloadAsync(Uri downloadUrl)
         {
-            if (string.Equals(downloadUrl.Scheme, "ftp", StringComparison.OrdinalIgnoreCase))
-            {
-                // Special handling for FTP access
-                var downloadRequest = WebRequest.Create(downloadUrl);
-                var downloadResponse = await Task.Factory.FromAsync(downloadRequest.BeginGetResponse, downloadRequest.EndGetResponse, null);
-                using (var temp = new MemoryStream())
-                {
-                    var responseStream = downloadResponse.GetResponseStream();
-                    var buffer = new byte[100 * 1024];
-                    int readCount;
-                    //var totalReadCount = 0;
-                    while ((readCount = responseStream.Read(buffer, 0, buffer.Length)) != 0)
-                    {
-                        temp.Write(buffer, 0, readCount);
-                        //totalReadCount += readCount;
-                        //Debug.WriteLine(totalReadCount);
-                    }
-                    return temp.ToArray();
-                }
-            }
-            else
-            {
-                var downloadRequest = new RestRequest(downloadUrl);
-                var downloadResponse = await Client.Execute(downloadRequest);
-                return downloadResponse.RawBytes;
-            }
+            var downloadResponse = await _client.GetAsync(downloadUrl);
+            downloadResponse.EnsureSuccessStatusCode();
+            return await downloadResponse.Content.ReadAsByteArrayAsync();
         }
     }
 }

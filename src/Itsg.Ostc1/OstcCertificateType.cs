@@ -11,7 +11,9 @@ namespace Itsg.Ostc1
         /// <summary>
         /// SHA1-Zertifikat
         /// </summary>
+        [Obsolete("Es wird nur noch SHA256 unterstützt")]
         Sha1 = 1,
+
         /// <summary>
         /// SHA256-Zertifikat
         /// </summary>
