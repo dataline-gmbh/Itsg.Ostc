@@ -87,9 +87,15 @@ namespace Itsg.Ostc.Certificates
                 chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
                 chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
                 if (!chain.Build(certificate))
+                {
                     return null;
-                if (chain.ChainStatus.Any(x => x.Status != X509ChainStatusFlags.NoError))
+                }
+
+                if (chain.ChainStatus.Any(x => x.Status != X509ChainStatusFlags.NoError && x.Status != X509ChainStatusFlags.UntrustedRoot && x.Status != X509ChainStatusFlags.NotTimeValid))
+                {
                     return null;
+                }
+
                 var chainCerts = chain.ChainElements.Cast<X509ChainElement>().Skip(1).Select(x => x.Certificate).ToArray();
                 var result = new CertificateChain(certificate, chainCerts);
                 return result;
